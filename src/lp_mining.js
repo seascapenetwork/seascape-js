@@ -34,7 +34,7 @@ module.exports = {
 	    throw "no abi was loaded for contract";
 	}
 	
-	let sessionId = this.contract.methods.lastSessionIds(lpToken).call();
+	let sessionId = await this.contract.methods.lastSessionIds(lpToken).call();
 
 	if (sessionId == undefined) {
 	    throw "no session found in contract";
