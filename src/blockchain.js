@@ -3,7 +3,7 @@ let Web3 = require('web3');
 let httpProvider = process.env.REMOTE_HTTP;
 
 if (process.env.REMOTE_HTTP == undefined) {
- if (httpProvider != window.web3.currentProvider) {
+    if (typeof window !== "undefined" && httpProvider != window.web3.currentProvider) {
      httpProvider = window.web3.currentProvider;     
  } else {
      throw "no web3 was detected";
