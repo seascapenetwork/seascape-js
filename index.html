@@ -9,14 +9,12 @@
 	  let lpMining = seascape.gameById(1);	  
 	  await lpMining.loadContracts();	  
     
-    // lp token address is a pair CWS-ETH on uniswap
-    //let lpToken = "0x168840Df293413A930d3D40baB6e1Cd8F406719D";
+	  // lp token address is a pair CWS-ETH on uniswap	  
 	  let lpToken = "0xdc935332d39a4c632864dbbed3cfdbf049fb9267";	  
 
 	  let cwsAddress = "0x168840Df293413A930d3D40baB6e1Cd8F406719D";	  
            
-	  //let sessionId = await lpMining.setSessionId(lpToken);	  
-	  let sessionId = 2;	  
+	  let sessionId = await lpMining.setSessionId(lpToken);	  
     
 	  let session = await lpMining.setSession(sessionId);	  
 
