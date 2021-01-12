@@ -1,6 +1,6 @@
 {
   "name": "seascape",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Seascape SDK to work with games",
   "main": "index.js",
   "scripts": {
