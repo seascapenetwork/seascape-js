@@ -1,4 +1,4 @@
-//let seascape = require("./seascape.js");
+let seascape = require("./src/seascape.js");
 
 let printApy = async function(){
     let lpMining = seascape.gameById(1);
@@ -6,15 +6,16 @@ let printApy = async function(){
     
     // lp token address is a pair CWS-ETH on uniswap
     //let lpToken = "0x168840Df293413A930d3D40baB6e1Cd8F406719D";
-    let lpToken = "0xdc935332d39a4c632864dbbed3cfdbf049fb9267";
+    let lpToken = "0xdC935332D39a4C632864DBBED3CfDBf049FB9267";
 
     let cwsAddress = "0x168840Df293413A930d3D40baB6e1Cd8F406719D";
-           
-    //let sessionId = await lpMining.setSessionId(lpToken);
-    let sessionId = 2;
-    
-    let session = await lpMining.setSession(sessionId);
 
+    // return last session for lp token
+    let sessionId = await lpMining.setSessionId(lpToken);
+
+    // session data
+    let session = await lpMining.setSession(sessionId);
+    
     // finally, can show APY
     let prices = await seascape.cws.getPrice(lpMining.networkId, cwsAddress);
 
@@ -22,7 +23,7 @@ let printApy = async function(){
     console.log(`APY: ${apy} %`);
 };
 
-//printApy();
+printApy();
 
 var express = require('express');
 var app = express();
