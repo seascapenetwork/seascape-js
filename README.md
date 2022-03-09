@@ -17,5 +17,15 @@ or
 
 index.js + index.html is holding an example of APY of first game.
 
-# compilation
-`browserify -t brfs --standalone seascape src/seascape.js -o dist/seascape.js`
+# Development and publishing
+1. Compile the Typescript to Javascript code
+
+```tsc```
+
+2. Create a single file in `dist` folder to use it in the browser.
+
+```browserify -t brfs --standalone seascape src/seascape.js -o dist/seascape.js`
+
+3. Finally upload it to the NPMJS
+
+```npm publish```
