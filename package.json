@@ -1,9 +1,11 @@
 {
   "name": "seascape",
-  "version": "1.0.17",
-  "description": "Seascape SDK to work with games",
+  "version": "1.1.0",
+  "description": "A Node.js module to interact with the blockchain in the professional way.",
   "main": "compiled/index.js",
-  "files": ["compiled/**/*"],
+  "files": [
+    "compiled/**/*"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,7 +31,7 @@
     "@ethersproject/contracts": "^5.0.9",
     "@ethersproject/providers": "^5.0.18",
     "@ethersproject/solidity": "^5.0.8",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "babel-polyfill": "^6.26.0",
     "browserify": "^17.0.0",
     "ethers": "^5.5.4",
