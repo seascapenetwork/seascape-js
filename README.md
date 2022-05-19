@@ -18,7 +18,9 @@ The following of the document is divided into two sections. The first section is
 
 ---
 
-# Installation
+# Usage
+
+## Installation
 
 For node.js use the following:
 
@@ -85,31 +87,39 @@ import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServe
 
 # Contribution
 
-# installation
-1. clone this repo
+## Installation
+1. fork this repo
 2. install dependencies: `npm install`
 done!
 
-# sample
-You can run the sample on localhost at port 8080 :
-
-`node index.js`
-
-or
-
-`cmd /C "set REMOTE_HTTP=https://rinkeby.infura.io/v3/<key> && node index.js"`
-
-index.js + index.html is holding an example of APY of first game.
-
-# Development and publishing
+## Development
 1. Compile the Typescript to Javascript code
 
 ```tsc```
 
-2. Create a single file in `dist` folder to use it in the browser.
+2. Add the tests.
+3. Add the example of code use in examples folder.
+4. Add the part of the code in README.md.
+
+## Publishing for contributors
+* Create a pull request to the https://github.com/blocklords/seacape-js
+* Raise the issue with your changes.
+
+# Seascape Team development maintaining
+Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer I want to be able to remember how to work on this project.
+
+* Clone if you didn't.
+* Create .env based on `.example.env`
+* Run the docker container: `docker-compose up -d`
+* Enter into the docker container: `docker exec -it seascape-js`
+* Install dependencies: `npm install`.
+* Run your code.
+* Create the test.
+* Create the example.
+* Update the version in package.json and push it to the github. 
+* Push to the npm: `npm publish`.
+
+# TODO
+Add the browserify in the future to enable it in the browsers.
 
 ```browserify -t brfs --standalone seascape src/seascape.js -o dist/seascape.js`
-
-3. Finally upload it to the NPMJS
-
-```npm publish```
