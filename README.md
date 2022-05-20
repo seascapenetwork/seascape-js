@@ -141,13 +141,12 @@ Additionally, developer can add the following optional parameters:
 ### CDN Update
 
 ```typescript
-import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig } from "seascape";
+import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig, SmartcontractPath } from "seascape";
 
 (async () => {
     let path = {project: 'lighthouse', env: 'beta'} as ConfigPath;
-    let url = `https://cdn.seascape.network/${path.project}/${path.env}/config.json`;
 
-    let initialized = await CdnRead.initConfig(url);
+    let initialized = await CdnRead.initConfig(path);
     if (!initialized) {
         console.log(`Global initializiation failed`);
         process.exit(1);
@@ -170,9 +169,12 @@ import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig } from "seascape";
         abi: "no-abi",
     } as SmartcontractConfig;
 
-    let networkId = 1287;
+    let smartcontractPath = {
+        networkId: 1287,
+        type: 'nfts'
+    } as SmartcontractPath;
 
-    let updated = await CdnWrite.setSmartcontract(path, client, networkId, 'nfts', smartcontract);
+    let updated = await CdnWrite.setSmartcontract(path, client, smartcontractPath, smartcontract);
     console.log(`Was CDN updated successfully? ${updated}`);
 })();
 ```
