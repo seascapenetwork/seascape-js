@@ -5,6 +5,10 @@ import { Provider } from "./provider";
 import Wallet from "./wallet";
 import ProofOfServer from "./proof-of-server";
 import Verifier from "./verifier";
+import * as CdnRead from "./cdn-config/read";
+import * as CdnWrite from "./cdn-config/write";
+import * as CdnUtil from "./cdn-config/util";
+import { ConfigPath, SmartcontractConfig } from './cdn-config/util';
 
 export {
     SmartcontractData,
@@ -13,5 +17,10 @@ export {
     ProofOfServer,
     Verifier,
     Smartcontract,
-    Provider
+    Provider,
+    CdnRead,
+    CdnWrite,
+    CdnUtil,
+    ConfigPath,
+    SmartcontractConfig
 }

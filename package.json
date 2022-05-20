@@ -1,6 +1,6 @@
 {
   "name": "seascape",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "Interact with the blockchain in a professional way.",
   "main": "compiled/index.js",
   "files": [
@@ -31,6 +31,7 @@
     "@ethersproject/contracts": "^5.0.9",
     "@ethersproject/providers": "^5.0.18",
     "@ethersproject/solidity": "^5.0.8",
+    "ali-oss": "^6.17.1",
     "axios": "^0.21.4",
     "babel-polyfill": "^6.26.0",
     "browserify": "^17.0.0",
