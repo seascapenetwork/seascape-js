@@ -83,6 +83,69 @@ import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServe
 })();
 ```
 
+## Verify
+Verification of the Proof Of Server.
+
+```typescript
+import { SmartcontractData, SmartcontractDataTypes as TYPE, Verify } from "../src/index";
+
+(async () => {
+    let user = '0x5bDed8f6BdAE766C361EDaE25c5DC966BCaF8f43';
+    let saleId = 1;
+
+    let params: Array<SmartcontractData> = [
+        new SmartcontractData(TYPE.ADDRESS, user as string),
+        new SmartcontractData(TYPE.UINT256, saleId as Number),
+    ]
+
+    // Proof of the server represented as a signature.
+    let signature = '0x115361e2e4feb7bea1084d0059b981b95cde8edbd2346b0e23d41d5a84aeb41448bee659895f053eedf9aba125b935f6c53a926d6bae3677367c5f95a47b83131c';
+
+    // The server account that generated the proof.
+    let serverAddress = '0x5bDed8f6BdAE766C361EDaE25c5DC966BCaF8f43';
+
+    let verified = await Verify(params, signature, serverAddress);
+    console.log(`
+    The parameters 
+        user: ${user}, 
+        saleId: ${saleId} 
+    are approved by the server account 
+        ${serverAddress}
+    using the proof 
+        ${signature}
+    Proof is valid? 
+        ${verified}
+    `);
+})();
+```
+
+## CDN Config
+CDN config is handling the information about the abi, address of the smartcontracts.
+
+The structure of the configuration:
+```json
+{
+    "1": {
+        "erc20": [ 
+            {
+                "name": "CrownsToken",
+                "address": "0xFde9cad69E98b3Cc8C998a8F2094293cb0bD6911",
+                "abi": "https://cdn.seascape.network/smartcontracts/abi/CrownsToken.json"
+            }
+        ]
+    }
+}
+```
+`"1"` is the network id. In our case it's the Ethereum Mainnet.
+Each network has the group of smartcontracts. "erc20" is the group of ERC20 Tokens. The group is the list of config objects.
+Each config object has `name`, `address`, `abi` fields required. 
+Additionally, developer can add the following optional parameters:
+
+* `txid` &ndash; transaction when it was deployed.
+* `owner` &ndash; owner of the smartcontract.
+* `verifier` &ndash; the `Proof of Server` address in the smartcontract.
+* `fund` &ndash; the account that keeps the tokens/nfts of the smartcontract.
+
 ---
 
 # Contribution

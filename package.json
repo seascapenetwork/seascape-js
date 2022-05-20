@@ -1,7 +1,7 @@
 {
   "name": "seascape",
-  "version": "1.1.0",
-  "description": "A Node.js module to interact with the blockchain in the professional way.",
+  "version": "1.2.0",
+  "description": "Interact with the blockchain in a professional way.",
   "main": "compiled/index.js",
   "files": [
     "compiled/**/*"

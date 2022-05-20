@@ -1,4 +1,4 @@
-import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServer } from "../src/index";
+import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServer, Verify } from "../src/index";
 
 (async () => {
     let privateKey: string = process.env.TEST_PRIVATE_KEY!;
@@ -16,4 +16,7 @@ import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServe
 
     let signature: string = await ProofOfServer(params, wallet);
     console.log(`Signature is ${signature}`);
+
+    let verified = await Verify(params, signature, wallet.address);
+    console.log(`Verified? ${verified}`);
 })();
