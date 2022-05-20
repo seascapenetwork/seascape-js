@@ -74,44 +74,50 @@ exports.loadLocalSync = loadLocalSync;
 /**
  * Load the JSON file as a JS object from remote machine
  * @param url The remote path of the JSON file
+ * @param noError The error is not shown if its set to true.
  * @returns Object or FALSE
  */
-var loadRemote = function (url) { return __awaiter(void 0, void 0, void 0, function () {
-    var res, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, axios_1["default"])({
-                        method: 'get',
-                        url: url,
-                        responseType: 'json'
-                    })];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-            case 2:
-                error_1 = _a.sent();
-                if (axios_1["default"].isAxiosError(error_1)) {
-                    console.log({
-                        error_path: 'src/utils/json.loadRemote',
-                        line: 'axios',
-                        message: "could not fetch remote data\nfrom path '".concat(url, "'\nRemote handler error: ").concat(error_1.message)
-                    });
-                    return [2 /*return*/, false];
-                }
-                else {
-                    console.log({
-                        error_path: 'src/utils/json.loadRemote',
-                        line: 'unknown',
-                        message: "could not fetch remote data\nfrom path '".concat(url, "'\nRemote handler error: ").concat(error_1)
-                    });
-                    return [2 /*return*/, false];
-                }
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
+var loadRemote = function (url, noError) {
+    if (noError === void 0) { noError = false; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var res, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, (0, axios_1["default"])({
+                            method: 'get',
+                            url: url,
+                            responseType: 'json'
+                        })];
+                case 1:
+                    res = _a.sent();
+                    return [2 /*return*/, res.data];
+                case 2:
+                    error_1 = _a.sent();
+                    if (axios_1["default"].isAxiosError(error_1)) {
+                        if (!noError) {
+                            console.log({
+                                error_path: 'src/utils/json.loadRemote',
+                                line: 'axios',
+                                message: "could not fetch remote data\nfrom path '".concat(url, "'\nRemote handler error: ").concat(error_1.message)
+                            });
+                        }
+                        return [2 /*return*/, false];
+                    }
+                    else {
+                        console.log({
+                            error_path: 'src/utils/json.loadRemote',
+                            line: 'unknown',
+                            message: "could not fetch remote data\nfrom path '".concat(url, "'\nRemote handler error: ").concat(error_1)
+                        });
+                        return [2 /*return*/, false];
+                    }
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
     });
-}); };
+};
 exports.loadRemote = loadRemote;
 //# sourceMappingURL=json.js.map

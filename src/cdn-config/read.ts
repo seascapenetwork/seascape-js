@@ -81,15 +81,22 @@ export const availableContracts = (networkId: string, type: string) => {
 /**
  * Initialize the Config once only. The config loaded from CDN is set globally. 
  * @param configUrl string link starting with http:// or https://
+ * @param empty by default FALSE, if it's empty, then when the remote is not exists, 
+ * then it will be created in the repo as empty object
  * @returns TRUE or FALSE
  */
-export const initConfig = async (configUrl :string) => {
+export const initConfig = async (configUrl :string, empty = false) => {
     if ((global as any).config !== undefined && (global as any).config !== null) {
         return true;
     } else {
-        let config = await loadRemote(configUrl);
+        let config = await loadRemote(configUrl, empty);
         if (config === false) {
-            return false;
+            if (empty) {
+                (global as any).config = {};
+                return true;
+            } else {
+                return false;
+            }
         } else {
             (global as any).config = config;
             return true;

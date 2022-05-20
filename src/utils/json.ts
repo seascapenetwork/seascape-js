@@ -35,9 +35,10 @@ export const loadLocalSync = (path: string) => {
 /**
  * Load the JSON file as a JS object from remote machine
  * @param url The remote path of the JSON file
+ * @param noError The error is not shown if its set to true.
  * @returns Object or FALSE
  */
-export const loadRemote = async (url: string) => {
+export const loadRemote = async (url: string, noError = false) => {
     try {
         let res = await axios({
             method: 'get',
@@ -48,11 +49,13 @@ export const loadRemote = async (url: string) => {
     } 
     catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log({
-                error_path: 'src/utils/json.loadRemote',
-                line: 'axios',
-                message: `could not fetch remote data\nfrom path '${url}'\nRemote handler error: ${error.message}`
-            })
+            if (!noError) {
+                console.log({
+                    error_path: 'src/utils/json.loadRemote',
+                    line: 'axios',
+                    message: `could not fetch remote data\nfrom path '${url}'\nRemote handler error: ${error.message}`
+                }) 
+            }
             return false;
         } else {
             console.log({

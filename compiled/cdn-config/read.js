@@ -109,29 +109,40 @@ exports.availableContracts = availableContracts;
 /**
  * Initialize the Config once only. The config loaded from CDN is set globally.
  * @param configUrl string link starting with http:// or https://
+ * @param empty by default FALSE, if it's empty, then when the remote is not exists,
+ * then it will be created in the repo as empty object
  * @returns TRUE or FALSE
  */
-var initConfig = function (configUrl) { return __awaiter(void 0, void 0, void 0, function () {
-    var config;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (!(global.config !== undefined && global.config !== null)) return [3 /*break*/, 1];
-                return [2 /*return*/, true];
-            case 1: return [4 /*yield*/, (0, json_1.loadRemote)(configUrl)];
-            case 2:
-                config = _a.sent();
-                if (config === false) {
-                    return [2 /*return*/, false];
-                }
-                else {
-                    global.config = config;
+var initConfig = function (configUrl, empty) {
+    if (empty === void 0) { empty = false; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var config;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!(global.config !== undefined && global.config !== null)) return [3 /*break*/, 1];
                     return [2 /*return*/, true];
-                }
-                _a.label = 3;
-            case 3: return [2 /*return*/];
-        }
+                case 1: return [4 /*yield*/, (0, json_1.loadRemote)(configUrl, empty)];
+                case 2:
+                    config = _a.sent();
+                    if (config === false) {
+                        if (empty) {
+                            global.config = {};
+                            return [2 /*return*/, true];
+                        }
+                        else {
+                            return [2 /*return*/, false];
+                        }
+                    }
+                    else {
+                        global.config = config;
+                        return [2 /*return*/, true];
+                    }
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
     });
-}); };
+};
 exports.initConfig = initConfig;
 //# sourceMappingURL=read.js.map
