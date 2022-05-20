@@ -113,16 +113,17 @@ exports.availableContracts = availableContracts;
  * then it will be created in the repo as empty object
  * @returns TRUE or FALSE
  */
-var initConfig = function (configUrl, empty) {
+var initConfig = function (configPath, empty) {
     if (empty === void 0) { empty = false; }
     return __awaiter(void 0, void 0, void 0, function () {
-        var config;
+        var url, config;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    url = (0, util_1.cdnConfigUrl)(configPath);
                     if (!(global.config !== undefined && global.config !== null)) return [3 /*break*/, 1];
                     return [2 /*return*/, true];
-                case 1: return [4 /*yield*/, (0, json_1.loadRemote)(configUrl, empty)];
+                case 1: return [4 /*yield*/, (0, json_1.loadRemote)(url, empty)];
                 case 2:
                     config = _a.sent();
                     if (config === false) {

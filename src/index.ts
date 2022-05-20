@@ -8,7 +8,7 @@ import Verifier from "./verifier";
 import * as CdnRead from "./cdn-config/read";
 import * as CdnWrite from "./cdn-config/write";
 import * as CdnUtil from "./cdn-config/util";
-import { ConfigPath, SmartcontractConfig } from './cdn-config/util';
+import { ConfigPath, SmartcontractConfig, SmartcontractPath } from './cdn-config/util';
 
 export {
     SmartcontractData,
@@ -22,5 +22,6 @@ export {
     CdnWrite,
     CdnUtil,
     ConfigPath,
-    SmartcontractConfig
+    SmartcontractConfig,
+    SmartcontractPath
 }

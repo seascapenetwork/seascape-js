@@ -5,7 +5,7 @@
  */
 
 import { loadRemote } from '../utils/json';
-import { validateConfNetwork } from './util';
+import { validateConfNetwork, cdnConfigUrl, ConfigPath } from './util';
 
 export const contractAddress = (networkId: string, type: string, name: string) => {
     if (!validateConfNetwork(networkId)) {
@@ -85,11 +85,13 @@ export const availableContracts = (networkId: string, type: string) => {
  * then it will be created in the repo as empty object
  * @returns TRUE or FALSE
  */
-export const initConfig = async (configUrl :string, empty = false) => {
+export const initConfig = async (configPath: ConfigPath, empty = false) => {
+    let url = cdnConfigUrl(configPath);
+
     if ((global as any).config !== undefined && (global as any).config !== null) {
         return true;
     } else {
-        let config = await loadRemote(configUrl, empty);
+        let config = await loadRemote(url, empty);
         if (config === false) {
             if (empty) {
                 (global as any).config = {};

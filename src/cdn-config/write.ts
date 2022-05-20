@@ -5,11 +5,11 @@
  * For updating the config modules, please use the /src/cdn-config/write.ts
  */
 
-import { SmartcontractConfig, ConfigPath } from './util';
+import { SmartcontractConfig, ConfigPath, SmartcontractPath } from './util';
 import { contractIndex } from './read';
 import { uploadConfig, connection } from './alicloud';
 
-export const setSmartcontract = async (path: ConfigPath, cdnClient: any, networkId: Number, type: string, obj: SmartcontractConfig) => {
+export const setSmartcontract = async (path: ConfigPath, cdnClient: any, smartcontractPath: SmartcontractPath, obj: SmartcontractConfig) => {
     if ((global as any).config === undefined || (global as any).config === null) {
         console.log({
             error_path: 'src/cdn-config/write.setSmartcontract',
@@ -19,7 +19,8 @@ export const setSmartcontract = async (path: ConfigPath, cdnClient: any, network
         return false;
     }
 
-    let idString = networkId.toString();
+    let idString = smartcontractPath.networkId.toString();
+    let type = smartcontractPath.type;
 
     if (!(global as any).config[idString]) {
         (global as any).config[idString] = {};

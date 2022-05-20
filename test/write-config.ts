@@ -1,10 +1,10 @@
-import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig } from "../src/index";
+import { CdnUtil, CdnRead, CdnWrite, ConfigPath, SmartcontractConfig, SmartcontractPath } from "../src/index";
 
 (async () => {
     let path = {project: 'lighthouse', env: 'beta'} as ConfigPath;
-    let url = `https://cdn.seascape.network/${path.project}/${path.env}/config.json`;
+    let smartcontractPath = {networkId: 1287, type: 'nfts'} as SmartcontractPath;
 
-    let initialized = await CdnRead.initConfig(url);
+    let initialized = await CdnRead.initConfig(path);
     if (!initialized) {
         console.log(`Global initializiation failed`);
         process.exit(1);
@@ -27,7 +27,6 @@ import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig } from "../src/index
         abi: "no-abi",
     } as SmartcontractConfig;
 
-    let networkId = 1287;
-    let updated = await CdnWrite.setSmartcontract(path, client, networkId, 'nfts', smartcontract);
+    let updated = await CdnWrite.setSmartcontract(path, client, smartcontractPath, smartcontract);
     console.log(`Was CDN updated successfully? ${updated}`);
 })();

@@ -1,6 +1,11 @@
 "use strict";
 exports.__esModule = true;
-exports.validateConfNetwork = void 0;
+exports.validateConfNetwork = exports.cdnConfigUrl = exports.SEASCAPE_CDN = void 0;
+exports.SEASCAPE_CDN = 'https://cdn.seascape.network/';
+var cdnConfigUrl = function (path) {
+    return "".concat(exports.SEASCAPE_CDN).concat(path.project, "/").concat(path.env, "/config.json");
+};
+exports.cdnConfigUrl = cdnConfigUrl;
 var validateConfNetwork = function (networkId) {
     if (global.config === undefined || global.config === null) {
         console.log({

@@ -45,8 +45,8 @@ exports.__esModule = true;
 exports.connectCdn = exports.setSmartcontract = void 0;
 var read_1 = require("./read");
 var alicloud_1 = require("./alicloud");
-var setSmartcontract = function (path, cdnClient, networkId, type, obj) { return __awaiter(void 0, void 0, void 0, function () {
-    var idString, i, uploaded;
+var setSmartcontract = function (path, cdnClient, smartcontractPath, obj) { return __awaiter(void 0, void 0, void 0, function () {
+    var idString, type, i, uploaded;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -58,7 +58,8 @@ var setSmartcontract = function (path, cdnClient, networkId, type, obj) { return
                     });
                     return [2 /*return*/, false];
                 }
-                idString = networkId.toString();
+                idString = smartcontractPath.networkId.toString();
+                type = smartcontractPath.type;
                 if (!global.config[idString]) {
                     global.config[idString] = {};
                 }
