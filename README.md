@@ -83,7 +83,7 @@ import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServe
 })();
 ```
 
-## Verify
+## Verifier
 Verification of the Proof Of Server.
 
 ```typescript
