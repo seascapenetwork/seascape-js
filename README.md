@@ -171,7 +171,7 @@ import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig } from "seascape";
     } as SmartcontractConfig;
 
     let networkId = 1287;
-    
+
     let updated = await CdnWrite.setSmartcontract(path, client, networkId, 'nfts', smartcontract);
     console.log(`Was CDN updated successfully? ${updated}`);
 })();
@@ -208,6 +208,7 @@ Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer
 * Run your code.
 * Create the test.
 * Create the example.
+* Compile to Javascript `npx tsc`.
 * Update the version in package.json and push it to the github. 
 * Push to the npm: `npm publish`.
 
