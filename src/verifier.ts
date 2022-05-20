@@ -11,12 +11,12 @@ import { validateParams } from './utils/validate-params';
  * Its for the data that client will send to blockchain network.
  * @param params list of parameters to sign
  * @param wallet The signer
- * @returns the generated signature
- * @throws Error if no Method Params
+ * @returns the generated address or empty string
  */ 
-export default async (params: Array<SmartcontractData>, signature: string, walletAddress: string): Promise<Boolean> => {
+export default async (params: Array<SmartcontractData>, signature: string): Promise<String> => {
     if (!validateParams(params)) {
-        throw Error(`Empty data`);
+        console.error(`Invalid parameters given!`);
+        return "";
     }
 
     let hash = SmartcontractData.concat(params).hash();
@@ -26,11 +26,11 @@ export default async (params: Array<SmartcontractData>, signature: string, walle
  
     try {
         let address = await ethers.utils.recoverAddress(arr, signature);
-        return address.toLowerCase() == walletAddress.toLowerCase();
+        return address;
     } catch (error) {
         console.error(error);
         console.error(params);
         console.error(`Error during the verification of the messaget'`);
-        return false;
+        return "";
     }
 }

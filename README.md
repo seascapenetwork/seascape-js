@@ -61,7 +61,7 @@ import { Smartcontract, Provider } from 'seascape';
 *Proof of Server* is the signature over the data that is signed on the backend. Then when the user sends the data to the smartcontract, the smartcontract verifies that the data is from the backend. For verification, blockchain uses [ecrecover](https://docs.soliditylang.org/en/v0.8.0/units-and-global-variables.html#mathematical-and-cryptographic-functions) function for verification.
 
 ```typescript
-import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServer } from "../src/index";
+import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServer } from "seascape";
 
 (async () => {
     let privateKey: string = process.env.TEST_PRIVATE_KEY!;
@@ -87,7 +87,7 @@ import { Wallet, SmartcontractData, SmartcontractDataTypes as TYPE, ProofOfServe
 Verification of the Proof Of Server.
 
 ```typescript
-import { SmartcontractData, SmartcontractDataTypes as TYPE, Verify } from "../src/index";
+import { SmartcontractData, SmartcontractDataTypes as TYPE, Verifier } from "seascape";
 
 (async () => {
     let user = '0x5bDed8f6BdAE766C361EDaE25c5DC966BCaF8f43';
@@ -104,18 +104,8 @@ import { SmartcontractData, SmartcontractDataTypes as TYPE, Verify } from "../sr
     // The server account that generated the proof.
     let serverAddress = '0x5bDed8f6BdAE766C361EDaE25c5DC966BCaF8f43';
 
-    let verified = await Verify(params, signature, serverAddress);
-    console.log(`
-    The parameters 
-        user: ${user}, 
-        saleId: ${saleId} 
-    are approved by the server account 
-        ${serverAddress}
-    using the proof 
-        ${signature}
-    Proof is valid? 
-        ${verified}
-    `);
+    let verifier = await Verifier(params, signature);
+    console.log(`The signer of the signature is ${verifier}? Is it matching to the whitelisted address? ${serverAddress == verifier}`);
 })();
 ```
 
