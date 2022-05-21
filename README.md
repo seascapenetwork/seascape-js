@@ -264,6 +264,10 @@ Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer
 * Update the version in package.json and push it to the github. 
 * Push to the npm: `npm publish`.
 
+# Tests
+The upload of the smartcontract in hardhat framework test is located as a sub project inside the `test/hardhat-project` directory. It should have the `.env` setted up based on the `.example.env`.
+
+
 # TODO
 Add the browserify in the future to enable it in the browsers.
 
