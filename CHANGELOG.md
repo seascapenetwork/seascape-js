@@ -1,3 +1,9 @@
+# CHANGELOG 1.6.0
+* Add the hardhat framework companion that uploads the Smartcontract address and ABI file to the Seascape CDN.
+* Add the module to read the ABI
+* Add the module to write the ABI
+* Add examples for all features.
+
 # CHANGELOG 1.3.3
 * Add the `SmartcontractPath` interface.
 * Hardcode the CDN base URL into the source code and use the utility `ConfigPath` interface to create the URL.

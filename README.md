@@ -138,7 +138,57 @@ Additionally, developer can add the following optional parameters:
 
 ---
 
-### CDN Update
+## Hardhat framework CDN update
+Upload the smartcontract address and abi to the Seascape CDN after smartcontract deployment in [hardhat](https://hardhat.org/) framework.
+
+> It uploads the smartcontract address and the ABI to the Seascape CDN.
+
+In the hardhat framework, install the `seascape`.
+Then add the following lines to the deploying script:
+
+```typescript
+// On top import the `CdnWrite` module.
+// Add the following .env variables
+//  ALIBABA_REGION=
+//  ALIBABA_ACCESSID=
+//  ALIBABA_SECRET=
+//  ALIBABA_BUCKET=
+import { CdnWrite } from "seascape";
+
+//
+// ... the rest of the code.
+//
+
+// Smartcontract name should be same as Smartcontract name that you deploy.
+let smartcontractName = 'Greeter';
+const Greeter = await ethers.getContractFactory(smartcontractName);
+
+const greeter = await Greeter.deploy("Hello, Hardhat and Seascape JS!");
+
+const addresses = await ethers.getSigners();
+let networkId = await addresses[0].getChainId();
+
+// Get the transaction id.
+await greeter.deployed();
+
+// the cdn should be available at
+// https://cdn.seascape.network/greeter/beta/config.json
+let cdnUpdated = CdnWrite.setHardhatSmartcontract({
+    networkId: networkId,
+    projectName: 'greeter', 
+    projectEnv: 'beta', 
+    contractType: 'main', 
+    contractName: smartcontractName, 
+    deployedInstance: greeter
+});
+
+console.log("Greeter deployed to:", greeter.address);
+if (!cdnUpdated) {
+    console.log("Please update the cdn");
+}
+```
+
+### CDN Update custom
 
 ```typescript
 import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig, SmartcontractPath } from "seascape";

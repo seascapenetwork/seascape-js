@@ -36,8 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.uploadConfig = exports.connection = void 0;
+exports.uploadAbi = exports.uploadAbiConfig = exports.uploadConfig = exports.connectionByEnvironment = exports.connection = void 0;
 var OSS = require('ali-oss');
+var util_1 = require("./util");
 var connection = function (region, accessId, secret, bucket) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         try {
@@ -56,6 +57,28 @@ var connection = function (region, accessId, secret, bucket) { return __awaiter(
     });
 }); };
 exports.connection = connection;
+var connectionByEnvironment = function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        if (!process.env.ALIBABA_REGION) {
+            console.error("Missing ALIBABA_REGION env. variable");
+            return [2 /*return*/, undefined];
+        }
+        if (!process.env.ALIBABA_ACCESSID) {
+            console.error("Missing ALIBABA_ACCESSID env. variable");
+            return [2 /*return*/, undefined];
+        }
+        if (!process.env.ALIBABA_SECRET) {
+            console.error("Missing ALIBABA_SECRET env. variable");
+            return [2 /*return*/, undefined];
+        }
+        if (!process.env.ALIBABA_BUCKET) {
+            console.error("Missing ALIBABA_BUCKET env. variable");
+            return [2 /*return*/, undefined];
+        }
+        return [2 /*return*/, (0, exports.connection)(process.env.ALIBABA_REGION, process.env.ALIBABA_ACCESSID, process.env.ALIBABA_SECRET, process.env.ALIBABA_BUCKET)];
+    });
+}); };
+exports.connectionByEnvironment = connectionByEnvironment;
 function uploadConfig(path, oss, config) {
     return __awaiter(this, void 0, void 0, function () {
         var str, buff, result, error_1;
@@ -81,4 +104,56 @@ function uploadConfig(path, oss, config) {
     });
 }
 exports.uploadConfig = uploadConfig;
+function uploadAbiConfig(oss, smartcontractName, config) {
+    return __awaiter(this, void 0, void 0, function () {
+        var str, buff, url, result, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    str = JSON.stringify(config, null, 4);
+                    buff = Buffer.alloc(str.length, str);
+                    url = (0, util_1.cdnAbiConfigUrl)(smartcontractName, false);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, oss.put(url, buff)];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result];
+                case 3:
+                    error_2 = _a.sent();
+                    console.error(error_2);
+                    return [2 /*return*/, null];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.uploadAbiConfig = uploadAbiConfig;
+function uploadAbi(oss, smartcontractName, config, abi) {
+    return __awaiter(this, void 0, void 0, function () {
+        var str, buff, url, result, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    str = JSON.stringify(abi, null, 4);
+                    buff = Buffer.alloc(str.length, str);
+                    url = (0, util_1.cdnAbiUrl)(smartcontractName, config, false);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, oss.put(url, buff)];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result];
+                case 3:
+                    error_3 = _a.sent();
+                    console.error(error_3);
+                    return [2 /*return*/, null];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.uploadAbi = uploadAbi;
 //# sourceMappingURL=alicloud.js.map

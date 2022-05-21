@@ -5,14 +5,14 @@
  */
 
 import { loadRemote } from '../utils/json';
-import { validateConfNetwork, cdnConfigUrl, ConfigPath } from './util';
+import { validateConfNetwork, cdnConfigUrl, ConfigPath, cdnAbiConfigUrl, cdnAbiUrl, defaultAbiConfig, AbiConfig } from './util';
 
 export const contractAddress = (networkId: string, type: string, name: string) => {
     if (!validateConfNetwork(networkId)) {
         return false;
     }
 
-    if ((global as any).config[networkId][type] === undefined || (global as any).config[networkId][type] === null) {
+    if ((global as any).seascapeCdnConfig[networkId][type] === undefined || (global as any).seascapeCdnConfig[networkId][type] === null) {
         console.log({
             error_path: 'src/utils/config.contractAddress',
             line: 'no_type',
@@ -21,8 +21,8 @@ export const contractAddress = (networkId: string, type: string, name: string) =
         return false;
     }
 
-    for (var i = 0; i < (global as any).config[networkId][type].length; i++ ) {
-        let contract = (global as any).config[networkId][type][i];
+    for (var i = 0; i < (global as any).seascapeCdnConfig[networkId][type].length; i++ ) {
+        let contract = (global as any).seascapeCdnConfig[networkId][type][i];
         if (contract.name.toString() === name) {
             return contract.address.toString();
         }
@@ -41,12 +41,12 @@ export const contractIndex = (networkId: string, type: string, name: string) => 
         return false;
     }
 
-    if ((global as any).config[networkId][type] === undefined || (global as any).config[networkId][type] === null) {
+    if ((global as any).seascapeCdnConfig[networkId][type] === undefined || (global as any).seascapeCdnConfig[networkId][type] === null) {
         return false;
     }
 
-    for (var i = 0; i < (global as any).config[networkId][type].length; i++ ) {
-        let contract = (global as any).config[networkId][type][i];
+    for (var i = 0; i < (global as any).seascapeCdnConfig[networkId][type].length; i++ ) {
+        let contract = (global as any).seascapeCdnConfig[networkId][type][i];
         if (contract.name.toString() === name) {
             return i;
         }
@@ -66,7 +66,7 @@ export const availableContracts = (networkId: string, type: string) => {
         return false;
     }
 
-    if ((global as any).config[networkId][type] === undefined || (global as any).config[networkId][type] === null) {
+    if ((global as any).seascapeCdnConfig[networkId][type] === undefined || (global as any).seascapeCdnConfig[networkId][type] === null) {
         console.log({
             error_path: 'src/utils/config.availableContracts',
             line: 'no_type',
@@ -75,7 +75,7 @@ export const availableContracts = (networkId: string, type: string) => {
         return false;
     }
 
-    return (global as any).config[networkId][type];
+    return (global as any).seascapeCdnConfig[networkId][type];
 }
 
 /**
@@ -88,20 +88,38 @@ export const availableContracts = (networkId: string, type: string) => {
 export const initConfig = async (configPath: ConfigPath, empty = false) => {
     let url = cdnConfigUrl(configPath);
 
-    if ((global as any).config !== undefined && (global as any).config !== null) {
+    if ((global as any).seascapeCdnConfig !== undefined && (global as any).seascapeCdnConfig !== null) {
         return true;
     } else {
         let config = await loadRemote(url, empty);
         if (config === false) {
             if (empty) {
-                (global as any).config = {};
+                (global as any).seascapeCdnConfig = {};
                 return true;
             } else {
                 return false;
             }
         } else {
-            (global as any).config = config;
+            (global as any).seascapeCdnConfig = config;
             return true;
         }
     }
 };
+
+export const abiConfig = async (smartcontractName: string) => {
+    let url = cdnAbiConfigUrl(smartcontractName);
+
+    let config = await loadRemote(url, true);
+    if (config === false) {
+        return defaultAbiConfig();
+    } else {
+        return config;
+    }
+};
+
+export const abi = async (contractName: string, config: AbiConfig) => {
+    let url = cdnAbiUrl(contractName, config);
+
+    return await loadRemote(url);
+}
+

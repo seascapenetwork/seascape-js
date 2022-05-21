@@ -1,6 +1,6 @@
 {
   "name": "seascape",
-  "version": "1.3.3",
+  "version": "1.6.0",
   "description": "Interact with the blockchain in a professional way.",
   "main": "compiled/index.js",
   "files": [

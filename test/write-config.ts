@@ -1,8 +1,8 @@
 import { CdnUtil, CdnRead, CdnWrite, ConfigPath, SmartcontractConfig, SmartcontractPath } from "../src/index";
 
 (async () => {
-    let path = {project: 'lighthouse', env: 'beta'} as ConfigPath;
-    let smartcontractPath = {networkId: 1287, type: 'nfts'} as SmartcontractPath;
+    let path = {project: 'greeter', env: 'beta'} as ConfigPath;
+    let smartcontractPath = {networkId: 3, type: 'main'} as SmartcontractPath;
 
     let initialized = await CdnRead.initConfig(path);
     if (!initialized) {

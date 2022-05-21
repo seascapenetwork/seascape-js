@@ -41,14 +41,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.initConfig = exports.availableContracts = exports.contractIndex = exports.contractAddress = void 0;
+exports.abi = exports.abiConfig = exports.initConfig = exports.availableContracts = exports.contractIndex = exports.contractAddress = void 0;
 var json_1 = require("../utils/json");
 var util_1 = require("./util");
 var contractAddress = function (networkId, type, name) {
     if (!(0, util_1.validateConfNetwork)(networkId)) {
         return false;
     }
-    if (global.config[networkId][type] === undefined || global.config[networkId][type] === null) {
+    if (global.seascapeCdnConfig[networkId][type] === undefined || global.seascapeCdnConfig[networkId][type] === null) {
         console.log({
             error_path: 'src/utils/config.contractAddress',
             line: 'no_type',
@@ -56,8 +56,8 @@ var contractAddress = function (networkId, type, name) {
         });
         return false;
     }
-    for (var i = 0; i < global.config[networkId][type].length; i++) {
-        var contract = global.config[networkId][type][i];
+    for (var i = 0; i < global.seascapeCdnConfig[networkId][type].length; i++) {
+        var contract = global.seascapeCdnConfig[networkId][type][i];
         if (contract.name.toString() === name) {
             return contract.address.toString();
         }
@@ -74,11 +74,11 @@ var contractIndex = function (networkId, type, name) {
     if (!(0, util_1.validateConfNetwork)(networkId)) {
         return false;
     }
-    if (global.config[networkId][type] === undefined || global.config[networkId][type] === null) {
+    if (global.seascapeCdnConfig[networkId][type] === undefined || global.seascapeCdnConfig[networkId][type] === null) {
         return false;
     }
-    for (var i = 0; i < global.config[networkId][type].length; i++) {
-        var contract = global.config[networkId][type][i];
+    for (var i = 0; i < global.seascapeCdnConfig[networkId][type].length; i++) {
+        var contract = global.seascapeCdnConfig[networkId][type][i];
         if (contract.name.toString() === name) {
             return i;
         }
@@ -95,7 +95,7 @@ var availableContracts = function (networkId, type) {
     if (!(0, util_1.validateConfNetwork)(networkId)) {
         return false;
     }
-    if (global.config[networkId][type] === undefined || global.config[networkId][type] === null) {
+    if (global.seascapeCdnConfig[networkId][type] === undefined || global.seascapeCdnConfig[networkId][type] === null) {
         console.log({
             error_path: 'src/utils/config.availableContracts',
             line: 'no_type',
@@ -103,7 +103,7 @@ var availableContracts = function (networkId, type) {
         });
         return false;
     }
-    return global.config[networkId][type];
+    return global.seascapeCdnConfig[networkId][type];
 };
 exports.availableContracts = availableContracts;
 /**
@@ -121,14 +121,14 @@ var initConfig = function (configPath, empty) {
             switch (_a.label) {
                 case 0:
                     url = (0, util_1.cdnConfigUrl)(configPath);
-                    if (!(global.config !== undefined && global.config !== null)) return [3 /*break*/, 1];
+                    if (!(global.seascapeCdnConfig !== undefined && global.seascapeCdnConfig !== null)) return [3 /*break*/, 1];
                     return [2 /*return*/, true];
                 case 1: return [4 /*yield*/, (0, json_1.loadRemote)(url, empty)];
                 case 2:
                     config = _a.sent();
                     if (config === false) {
                         if (empty) {
-                            global.config = {};
+                            global.seascapeCdnConfig = {};
                             return [2 /*return*/, true];
                         }
                         else {
@@ -136,7 +136,7 @@ var initConfig = function (configPath, empty) {
                         }
                     }
                     else {
-                        global.config = config;
+                        global.seascapeCdnConfig = config;
                         return [2 /*return*/, true];
                     }
                     _a.label = 3;
@@ -146,4 +146,36 @@ var initConfig = function (configPath, empty) {
     });
 };
 exports.initConfig = initConfig;
+var abiConfig = function (smartcontractName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, config;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = (0, util_1.cdnAbiConfigUrl)(smartcontractName);
+                return [4 /*yield*/, (0, json_1.loadRemote)(url, true)];
+            case 1:
+                config = _a.sent();
+                if (config === false) {
+                    return [2 /*return*/, (0, util_1.defaultAbiConfig)()];
+                }
+                else {
+                    return [2 /*return*/, config];
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.abiConfig = abiConfig;
+var abi = function (contractName, config) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = (0, util_1.cdnAbiUrl)(contractName, config);
+                return [4 /*yield*/, (0, json_1.loadRemote)(url)];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+exports.abi = abi;
 //# sourceMappingURL=read.js.map
