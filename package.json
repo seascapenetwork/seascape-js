@@ -1,6 +1,6 @@
 {
   "name": "seascape",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Interact with the blockchain in a professional way.",
   "main": "compiled/index.js",
   "files": [
@@ -23,6 +23,7 @@
     "brfs": "^2.0.2",
     "express": "^4.17.1",
     "https-browserify": "^1.0.0",
+    "truffle": "^5.5.15",
     "url-loader": "^4.1.1",
     "webpack": "^5.12.2",
     "webpack-cli": "^4.3.1"

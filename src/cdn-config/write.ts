@@ -5,7 +5,7 @@
  * For updating the config modules, please use the /src/cdn-config/write.ts
  */
 
-import { SmartcontractConfig, ConfigPath, SmartcontractPath, HardhatSmartcontractConfig, AbiConfig, cdnAbiUrl } from './util';
+import { SmartcontractConfig, ConfigPath, SmartcontractPath, HardhatSmartcontractConfig, AbiConfig, cdnAbiUrl, TruffleConfig } from './util';
 import { contractIndex, abiConfig as getAbiConfig, initConfig, abi } from './read';
 import { uploadConfig, uploadAbiConfig, connection, connectionByEnvironment, uploadAbi } from './alicloud';
 import { abiFile as hardhatAbiFile } from './../utils/hardhat';
@@ -136,6 +136,48 @@ export const setHardhatSmartcontract = async (params: HardhatSmartcontractConfig
         name: params.contractName,
         address: params.deployedInstance.address,
         txid: params.deployedInstance.deployTransaction.hash,
+        abi: cdnAbiUrl(params.contractName, abiConfig, true),
+    } as SmartcontractConfig;
+
+    console.log(`The smartcontract object in the cdn config is`);
+    console.log(smartcontract);
+
+    let updated = await setSmartcontract(path, client, smartcontractPath, smartcontract);
+    console.log(`Was CDN updated successfully? ${updated}`);
+
+    return updated;
+}
+
+export const setTruffleSmartcontract = async (params: TruffleConfig) => {
+    let client = await connectionByEnvironment();
+    if (client === undefined) {
+        return false;
+    }
+
+    let abiConfig = await incrementAbiConfiguration(client, params.contractName);
+
+    let abiSetted = await setAbi(client, params.contractName, abiConfig, params.contractAbi);
+    if (!abiSetted) {
+        return false;
+    }
+
+    let path = {project: params.projectName, env: params.projectEnv} as ConfigPath;
+
+    let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
+
+    console.log(`The cdn list path where smartcontract object will be`);
+    console.log(smartcontractPath);
+
+    let initialized = await initConfig(path);
+    if (!initialized) {
+        console.log(`Global initializiation failed`);
+        process.exit(1);
+    } 
+
+    let smartcontract = {
+        name: params.contractName,
+        address: params.contractAddress,
+        txid: params.txid,
         abi: cdnAbiUrl(params.contractName, abiConfig, true),
     } as SmartcontractConfig;
 

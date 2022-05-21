@@ -188,6 +188,59 @@ if (!cdnUpdated) {
 }
 ```
 
+## Truffle framework CDN update
+Upload the smartcontract address and abi to the Seascape CDN after smartcontract deployment in [truffle](https://trufflesuite.com/truffle/) framework.
+
+* Import the 'seascape' into the project:
+```bash
+npm install seascape
+```
+
+* Add the `.env` based on the [seascape-js/.example.env](https://github.com/blocklords/seascape-js/blob/main/.example.env).
+
+* In the migrations file import the `CdnWrite`
+```javascript
+let { CdnWrite } = require('seascape');
+
+```
+
+* Then, update the migration and add the CdnWrite.
+
+```javascript
+const MetaCoin = artifacts.require("MetaCoin");
+let { CdnWrite } = require("seascape");
+
+module.exports = async function(deployer) {
+    let metacoin = await deployer.deploy(MetaCoin);
+
+    // The CDN will be available at
+    // https://cdn.seascape.network/<projectName>/<projectEnv>/config.json
+    //
+    // In our case:
+    // https://cdn.seascape.network/greeter/beta/config.sjon
+    let truffleParams = {
+        projectName: 'greeter',
+        projectEnv: 'beta',
+        networkId: await deployer.network_id,
+        txid: metacoin.transactionHash,
+        contractName: 'MetaCoin',
+        contractType: 'main',
+        contractAbi: metacoin.abi,
+        contractAddress: metacoin.address
+    };
+
+    let cdnUpdated = await seascape.CdnWrite.setTruffleSmartcontract(truffleParams);
+  
+    console.log(`Deployed successfully`);
+    if (cdnUpdated) {
+        console.log(`CDN was updated successfully`);
+    } else {
+        console.log(`CDN update failed. Please upload upload it manually!`);
+        console.log(truffleParams);
+    }
+}
+```
+
 ### CDN Update custom
 
 ```typescript
@@ -265,8 +318,37 @@ Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer
 * Push to the npm: `npm publish`.
 
 # Tests
+See the test scripts to see how it's used.
+In order to run the test scripts, run the following command:
+
+```sh
+npx ts-node test/<test file name>
+```
+
+There are example projects inside the test to see how to update the smartcontract address in the frameworks.
+
+## Hardhat framework
 The upload of the smartcontract in hardhat framework test is located as a sub project inside the `test/hardhat-project` directory. It should have the `.env` setted up based on the `.example.env`.
 
+## Truffle framework
+In the truffle, the better way to deploy the smartcontracts is using the `truffle migrate` instead the `truffle deploy`. So `seascape` SDK is built for that.
+Truffle uses the Javascript example. Therefore to test the updating the CDN after truffle migration, we should first compile the typescript source code to the javascript module.
+Then to run the migration with CDN update inside the test, change the terminal's directory to the `truffle-project`:
+
+```bash
+cd test/truffle-project
+```
+
+After that create the `.env` based on the `.example.env`
+Then run the `npm install`.
+
+The truffle will be available inside this folder as `npx truffle`.
+See the `test/truffle-project/migrations/2_deploy_contracts.js` how the CDN updated after the Truffle migrates the script.
+In order to see it in action run the following:
+
+```bash
+npx truffle migrate --network rinkeby
+```
 
 # TODO
 Add the browserify in the future to enable it in the browsers.

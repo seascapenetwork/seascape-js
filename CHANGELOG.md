@@ -1,3 +1,6 @@
+# CHANGELOG 1.7.0
+* Add the truffle framework companion that uploads the Smartcontract address and ABI file to the Seascape CDN.
+
 # CHANGELOG 1.6.0
 * Add the hardhat framework companion that uploads the Smartcontract address and ABI file to the Seascape CDN.
 * Add the module to read the ABI

@@ -27,6 +27,17 @@ export interface HardhatSmartcontractConfig {
     deployedInstance: any
 }
 
+export interface TruffleConfig {
+    networkId: number,
+    projectName: string,
+    projectEnv: string,
+    contractType: string, 
+    contractName: string,
+    contractAddress: string,
+    txid: string,
+    contractAbi: any
+}
+
 export interface AbiConfig {
     version: number
 }

@@ -42,7 +42,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.connectCdnByEnv = exports.connectCdn = exports.setHardhatSmartcontract = exports.incrementAbiConfiguration = exports.setAbi = exports.setAbiConfig = exports.setSmartcontract = void 0;
+exports.connectCdnByEnv = exports.connectCdn = exports.setTruffleSmartcontract = exports.setHardhatSmartcontract = exports.incrementAbiConfiguration = exports.setAbi = exports.setAbiConfig = exports.setSmartcontract = void 0;
 var util_1 = require("./util");
 var read_1 = require("./read");
 var alicloud_1 = require("./alicloud");
@@ -215,6 +215,53 @@ var setHardhatSmartcontract = function (params) { return __awaiter(void 0, void 
     });
 }); };
 exports.setHardhatSmartcontract = setHardhatSmartcontract;
+var setTruffleSmartcontract = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    var client, abiConfig, abiSetted, path, smartcontractPath, initialized, smartcontract, updated;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, alicloud_1.connectionByEnvironment)()];
+            case 1:
+                client = _a.sent();
+                if (client === undefined) {
+                    return [2 /*return*/, false];
+                }
+                return [4 /*yield*/, (0, exports.incrementAbiConfiguration)(client, params.contractName)];
+            case 2:
+                abiConfig = _a.sent();
+                return [4 /*yield*/, (0, exports.setAbi)(client, params.contractName, abiConfig, params.contractAbi)];
+            case 3:
+                abiSetted = _a.sent();
+                if (!abiSetted) {
+                    return [2 /*return*/, false];
+                }
+                path = { project: params.projectName, env: params.projectEnv };
+                smartcontractPath = { networkId: params.networkId, type: params.contractType };
+                console.log("The cdn list path where smartcontract object will be");
+                console.log(smartcontractPath);
+                return [4 /*yield*/, (0, read_1.initConfig)(path)];
+            case 4:
+                initialized = _a.sent();
+                if (!initialized) {
+                    console.log("Global initializiation failed");
+                    process.exit(1);
+                }
+                smartcontract = {
+                    name: params.contractName,
+                    address: params.contractAddress,
+                    txid: params.txid,
+                    abi: (0, util_1.cdnAbiUrl)(params.contractName, abiConfig, true)
+                };
+                console.log("The smartcontract object in the cdn config is");
+                console.log(smartcontract);
+                return [4 /*yield*/, (0, exports.setSmartcontract)(path, client, smartcontractPath, smartcontract)];
+            case 5:
+                updated = _a.sent();
+                console.log("Was CDN updated successfully? ".concat(updated));
+                return [2 /*return*/, updated];
+        }
+    });
+}); };
+exports.setTruffleSmartcontract = setTruffleSmartcontract;
 exports.connectCdn = alicloud_1.connection;
 exports.connectCdnByEnv = alicloud_1.connectionByEnvironment;
 //# sourceMappingURL=write.js.map
