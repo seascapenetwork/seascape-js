@@ -204,6 +204,15 @@ var setHardhatSmartcontract = function (params) { return __awaiter(void 0, void 
                     txid: params.deployedInstance.deployTransaction.hash,
                     abi: (0, util_1.cdnAbiUrl)(params.contractName, abiConfig, true)
                 };
+                if (params.owner) {
+                    smartcontract.owner = params.owner;
+                }
+                if (params.verifier) {
+                    smartcontract.verifier = params.verifier;
+                }
+                if (params.fund) {
+                    smartcontract.fund = params.fund;
+                }
                 console.log("The smartcontract object in the cdn config is");
                 console.log(smartcontract);
                 return [4 /*yield*/, (0, exports.setSmartcontract)(path, client, smartcontractPath, smartcontract)];
@@ -251,6 +260,15 @@ var setTruffleSmartcontract = function (params) { return __awaiter(void 0, void 
                     txid: params.txid,
                     abi: (0, util_1.cdnAbiUrl)(params.contractName, abiConfig, true)
                 };
+                if (params.owner) {
+                    smartcontract.owner = params.owner;
+                }
+                if (params.verifier) {
+                    smartcontract.verifier = params.verifier;
+                }
+                if (params.fund) {
+                    smartcontract.fund = params.fund;
+                }
                 console.log("The smartcontract object in the cdn config is");
                 console.log(smartcontract);
                 return [4 /*yield*/, (0, exports.setSmartcontract)(path, client, smartcontractPath, smartcontract)];

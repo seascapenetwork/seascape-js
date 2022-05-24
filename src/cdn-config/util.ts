@@ -24,7 +24,10 @@ export interface HardhatSmartcontractConfig {
     projectEnv: string,
     contractType: string, 
     contractName: string, 
-    deployedInstance: any
+    deployedInstance: any,
+    owner?: string,
+    verifier?: string,
+    fund?: string
 }
 
 export interface TruffleConfig {
@@ -35,7 +38,10 @@ export interface TruffleConfig {
     contractName: string,
     contractAddress: string,
     txid: string,
-    contractAbi: any
+    contractAbi: any,
+    owner?: string,
+    verifier?: string,
+    fund?: string
 }
 
 export interface AbiConfig {

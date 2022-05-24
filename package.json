@@ -1,6 +1,6 @@
 {
   "name": "seascape",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Interact with the blockchain in a professional way.",
   "main": "compiled/index.js",
   "files": [
@@ -40,6 +40,6 @@
     "ethers-ts": "^5.5.3",
     "stream-browserify": "^3.0.0",
     "tsify": "^5.0.4",
-    "typescript": "^4.6.2"
+    "typescript": "^4.7.2"
   }
 }

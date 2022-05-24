@@ -211,7 +211,7 @@ const MetaCoin = artifacts.require("MetaCoin");
 let { CdnWrite } = require("seascape");
 
 module.exports = async function(deployer) {
-    let metacoin = await deployer.deploy(MetaCoin);
+    await deployer.deploy(MetaCoin);
 
     // The CDN will be available at
     // https://cdn.seascape.network/<projectName>/<projectEnv>/config.json
@@ -222,11 +222,12 @@ module.exports = async function(deployer) {
         projectName: 'greeter',
         projectEnv: 'beta',
         networkId: await deployer.network_id,
-        txid: metacoin.transactionHash,
+        txid: MetaCoin.transactionHash,
         contractName: 'MetaCoin',
         contractType: 'main',
-        contractAbi: metacoin.abi,
-        contractAddress: metacoin.address
+        contractAbi: MetaCoin.abi,
+        contractAddress: MetaCoin.address,
+        owner: deployer.address
     };
 
     let cdnUpdated = await seascape.CdnWrite.setTruffleSmartcontract(truffleParams);

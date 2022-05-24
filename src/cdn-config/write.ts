@@ -138,6 +138,15 @@ export const setHardhatSmartcontract = async (params: HardhatSmartcontractConfig
         txid: params.deployedInstance.deployTransaction.hash,
         abi: cdnAbiUrl(params.contractName, abiConfig, true),
     } as SmartcontractConfig;
+    if (params.owner) {
+        smartcontract.owner = params.owner;
+    }
+    if (params.verifier) {
+        smartcontract.verifier = params.verifier;
+    }
+    if (params.fund) {
+        smartcontract.fund = params.fund;
+    }
 
     console.log(`The smartcontract object in the cdn config is`);
     console.log(smartcontract);
@@ -180,6 +189,16 @@ export const setTruffleSmartcontract = async (params: TruffleConfig) => {
         txid: params.txid,
         abi: cdnAbiUrl(params.contractName, abiConfig, true),
     } as SmartcontractConfig;
+
+    if (params.owner) {
+        smartcontract.owner = params.owner;
+    }
+    if (params.verifier) {
+        smartcontract.verifier = params.verifier;
+    }
+    if (params.fund) {
+        smartcontract.fund = params.fund;
+    }
 
     console.log(`The smartcontract object in the cdn config is`);
     console.log(smartcontract);
