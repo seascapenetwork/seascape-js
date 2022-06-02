@@ -1,7 +1,7 @@
 {
   "name": "seascape",
-  "version": "1.7.1",
-  "description": "Interact with the blockchain in a professional way.",
+  "version": "1.7.2",
+  "description": "Seascape SDK to save 30% of your time in Dapp development",
   "main": "compiled/index.js",
   "files": [
     "compiled/**/*"
