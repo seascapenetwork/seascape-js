@@ -52,7 +52,7 @@ export interface AbiConfig {
 
 export const cdnUrl = function (): string {
     if ((global as any).host !== undefined) {
-        return (global as any).host
+        return (global as any).cdnHost;
     }
     return SEASCAPE_CDN;
 }

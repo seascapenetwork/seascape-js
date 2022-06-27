@@ -1,3 +1,6 @@
+# CHANGELOG 1.7.5
+* Add the function to `cdnHost` as a preserved word. If the cdnHost is given, it will replace the default CDN host https://cdn.seascape.network
+
 # CHANGELOG 1.7.0
 * Add the truffle framework companion that uploads the Smartcontract address and ABI file to the Seascape CDN.
 

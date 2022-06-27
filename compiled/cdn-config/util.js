@@ -4,7 +4,7 @@ exports.validateConfNetwork = exports.defaultAbiConfig = exports.cdnAbiUrl = exp
 var SEASCAPE_CDN = 'https://cdn.seascape.network/';
 var cdnUrl = function () {
     if (global.host !== undefined) {
-        return global.host;
+        return global.cdnHost;
     }
     return SEASCAPE_CDN;
 };
