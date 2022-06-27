@@ -283,40 +283,34 @@ import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig, SmartcontractPath }
 })();
 ```
 
+---
 # Contribution
+The following part is for the maintainer of this project.
+Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer I want to be able to remember how to work on this project.
 
 ## Installation
-1. fork this repo
-2. install dependencies: `npm install`
-done!
+1. fork this repo.
+2. download [docker](https://www.docker.com/products/docker-desktop/).
+3. create `.env` based on the `.example.env`
+4. create the docker image and run a container based on the image: `docker-compose up -d`
+5. enter into the container: `docker exec -it seascape-js bash`
 
 ## Development
 1. Compile the Typescript to Javascript code
 
-```tsc```
+```npx tsc```
 
 2. Add the tests.
 3. Add the example of code use in examples folder.
 4. Add the part of the code in README.md.
+5. Update the version in package.json and push it to the github. 
+6. upload `npm publish`
 
 ## Publishing for contributors
 * Create a pull request to the https://github.com/blocklords/seacape-js
 * Raise the issue with your changes.
 
-# Seascape Team development maintaining
-Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer I want to be able to remember how to work on this project.
-
-* Clone if you didn't.
-* Create .env based on `.example.env`
-* Run the docker container: `docker-compose up -d`
-* Enter into the docker container: `docker exec -it seascape-js`
-* Install dependencies: `npm install`.
-* Run your code.
-* Create the test.
-* Create the example.
-* Compile to Javascript `npx tsc`.
-* Update the version in package.json and push it to the github. 
-* Push to the npm: `npm publish`.
+---
 
 # Tests
 See the test scripts to see how it's used.
