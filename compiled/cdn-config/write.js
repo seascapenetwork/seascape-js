@@ -138,8 +138,6 @@ var incrementAbiConfiguration = function (client, smartcontractName) { return __
             case 0: return [4 /*yield*/, (0, read_1.abiConfig)(smartcontractName)];
             case 1:
                 abiConfig = _a.sent();
-                console.log("Before incremention");
-                console.log(abiConfig);
                 abiConfig.version++;
                 return [4 /*yield*/, (0, exports.setAbiConfig)(client, smartcontractName, abiConfig)];
             case 2:
@@ -148,8 +146,6 @@ var incrementAbiConfiguration = function (client, smartcontractName) { return __
                     console.error("Abi config wasn't updated.");
                     return [2 /*return*/, false];
                 }
-                console.log("After incremention");
-                console.log(abiConfig);
                 return [2 /*return*/, abiConfig];
         }
     });
@@ -189,9 +185,7 @@ var setHardhatSmartcontract = function (params) { return __awaiter(void 0, void 
                 }
                 path = { project: params.projectName, env: params.projectEnv };
                 smartcontractPath = { networkId: params.networkId, type: params.contractType };
-                console.log("The cdn list path where smartcontract object will be");
-                console.log(smartcontractPath);
-                return [4 /*yield*/, (0, read_1.initConfig)(path)];
+                return [4 /*yield*/, (0, read_1.initConfig)(path, true)];
             case 5:
                 initialized = _a.sent();
                 if (!initialized) {
@@ -213,12 +207,9 @@ var setHardhatSmartcontract = function (params) { return __awaiter(void 0, void 
                 if (params.fund) {
                     smartcontract.fund = params.fund;
                 }
-                console.log("The smartcontract object in the cdn config is");
-                console.log(smartcontract);
                 return [4 /*yield*/, (0, exports.setSmartcontract)(path, client, smartcontractPath, smartcontract)];
             case 6:
                 updated = _a.sent();
-                console.log("Was CDN updated successfully? ".concat(updated));
                 return [2 /*return*/, updated];
         }
     });
@@ -245,9 +236,7 @@ var setTruffleSmartcontract = function (params) { return __awaiter(void 0, void 
                 }
                 path = { project: params.projectName, env: params.projectEnv };
                 smartcontractPath = { networkId: params.networkId, type: params.contractType };
-                console.log("The cdn list path where smartcontract object will be");
-                console.log(smartcontractPath);
-                return [4 /*yield*/, (0, read_1.initConfig)(path)];
+                return [4 /*yield*/, (0, read_1.initConfig)(path, true)];
             case 4:
                 initialized = _a.sent();
                 if (!initialized) {
@@ -269,12 +258,9 @@ var setTruffleSmartcontract = function (params) { return __awaiter(void 0, void 
                 if (params.fund) {
                     smartcontract.fund = params.fund;
                 }
-                console.log("The smartcontract object in the cdn config is");
-                console.log(smartcontract);
                 return [4 /*yield*/, (0, exports.setSmartcontract)(path, client, smartcontractPath, smartcontract)];
             case 5:
                 updated = _a.sent();
-                console.log("Was CDN updated successfully? ".concat(updated));
                 return [2 /*return*/, updated];
         }
     });
