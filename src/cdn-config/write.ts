@@ -118,8 +118,7 @@ export const setHardhatSmartcontract = async (params: HardhatSmartcontractConfig
 
     let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
 
-
-    let initialized = await initConfig(path);
+    let initialized = await initConfig(path, true);
     if (!initialized) {
         console.log(`Global initializiation failed`);
         process.exit(1);
@@ -163,8 +162,7 @@ export const setTruffleSmartcontract = async (params: TruffleConfig) => {
 
     let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
 
-
-    let initialized = await initConfig(path);
+    let initialized = await initConfig(path, true);
     if (!initialized) {
         console.log(`Global initializiation failed`);
         process.exit(1);
