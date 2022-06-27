@@ -78,8 +78,6 @@ export const setAbi = async (cdnClient: any, smartcontractName: string, abiConfi
 
 export const incrementAbiConfiguration = async (client: any, smartcontractName: string) => {
     let abiConfig = await getAbiConfig(smartcontractName);
-    console.log(`Before incremention`)
-    console.log(abiConfig);
     abiConfig.version++;
 
     let abiUpdated = await setAbiConfig(client, smartcontractName, abiConfig);
@@ -87,9 +85,6 @@ export const incrementAbiConfiguration = async (client: any, smartcontractName: 
         console.error(`Abi config wasn't updated.`);
         return false;
     }
-
-    console.log(`After incremention`)
-    console.log(abiConfig);
 
     return abiConfig;
 }
@@ -123,8 +118,6 @@ export const setHardhatSmartcontract = async (params: HardhatSmartcontractConfig
 
     let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
 
-    console.log(`The cdn list path where smartcontract object will be`);
-    console.log(smartcontractPath);
 
     let initialized = await initConfig(path);
     if (!initialized) {
@@ -148,11 +141,7 @@ export const setHardhatSmartcontract = async (params: HardhatSmartcontractConfig
         smartcontract.fund = params.fund;
     }
 
-    console.log(`The smartcontract object in the cdn config is`);
-    console.log(smartcontract);
-
     let updated = await setSmartcontract(path, client, smartcontractPath, smartcontract);
-    console.log(`Was CDN updated successfully? ${updated}`);
 
     return updated;
 }
@@ -174,8 +163,6 @@ export const setTruffleSmartcontract = async (params: TruffleConfig) => {
 
     let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
 
-    console.log(`The cdn list path where smartcontract object will be`);
-    console.log(smartcontractPath);
 
     let initialized = await initConfig(path);
     if (!initialized) {
@@ -200,11 +187,7 @@ export const setTruffleSmartcontract = async (params: TruffleConfig) => {
         smartcontract.fund = params.fund;
     }
 
-    console.log(`The smartcontract object in the cdn config is`);
-    console.log(smartcontract);
-
     let updated = await setSmartcontract(path, client, smartcontractPath, smartcontract);
-    console.log(`Was CDN updated successfully? ${updated}`);
 
     return updated;
 }
