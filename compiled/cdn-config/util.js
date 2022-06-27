@@ -1,15 +1,22 @@
 "use strict";
 exports.__esModule = true;
-exports.validateConfNetwork = exports.defaultAbiConfig = exports.cdnAbiUrl = exports.cdnAbiConfigUrl = exports.cdnConfigUrl = exports.SEASCAPE_CDN = void 0;
-exports.SEASCAPE_CDN = 'https://cdn.seascape.network/';
+exports.validateConfNetwork = exports.defaultAbiConfig = exports.cdnAbiUrl = exports.cdnAbiConfigUrl = exports.cdnConfigUrl = exports.cdnUrl = void 0;
+var SEASCAPE_CDN = 'https://cdn.seascape.network/';
+var cdnUrl = function () {
+    if (global.host !== undefined) {
+        return global.host;
+    }
+    return SEASCAPE_CDN;
+};
+exports.cdnUrl = cdnUrl;
 var cdnConfigUrl = function (path) {
-    return "".concat(exports.SEASCAPE_CDN).concat(path.project, "/").concat(path.env, "/config.json");
+    return "".concat((0, exports.cdnUrl)()).concat(path.project, "/").concat(path.env, "/config.json");
 };
 exports.cdnConfigUrl = cdnConfigUrl;
 var cdnAbiConfigUrl = function (contractName, fullAddress) {
     if (fullAddress === void 0) { fullAddress = true; }
     if (fullAddress) {
-        return "".concat(exports.SEASCAPE_CDN, "abi/").concat(contractName, "/info.json");
+        return "".concat((0, exports.cdnUrl)(), "abi/").concat(contractName, "/info.json");
     }
     else {
         return "/abi/".concat(contractName, "/info.json");
@@ -19,7 +26,7 @@ exports.cdnAbiConfigUrl = cdnAbiConfigUrl;
 var cdnAbiUrl = function (contractName, config, fullAddress) {
     if (fullAddress === void 0) { fullAddress = true; }
     if (fullAddress) {
-        return "".concat(exports.SEASCAPE_CDN, "abi/").concat(contractName, "/").concat(config.version.toString(), ".json");
+        return "".concat((0, exports.cdnUrl)(), "abi/").concat(contractName, "/").concat(config.version.toString(), ".json");
     }
     else {
         return "/abi/".concat(contractName, "/").concat(config.version.toString(), ".json");

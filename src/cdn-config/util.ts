@@ -1,3 +1,5 @@
+const SEASCAPE_CDN = 'https://cdn.seascape.network/';
+
 export interface SmartcontractConfig {
     name: string,
     abi: string,
@@ -48,15 +50,20 @@ export interface AbiConfig {
     version: number
 }
 
-export const SEASCAPE_CDN = 'https://cdn.seascape.network/';
+export const cdnUrl = function (): string {
+    if ((global as any).host !== undefined) {
+        return (global as any).host
+    }
+    return SEASCAPE_CDN;
+}
 
 export let cdnConfigUrl = (path: ConfigPath): string => {
-    return `${SEASCAPE_CDN}${path.project}/${path.env}/config.json`;
+    return `${cdnUrl()}${path.project}/${path.env}/config.json`;
 }
 
 export const cdnAbiConfigUrl = (contractName: string, fullAddress = true) : string => {
     if (fullAddress) {
-        return `${SEASCAPE_CDN}abi/${contractName}/info.json`;
+        return `${cdnUrl()}abi/${contractName}/info.json`;
     } else {
         return `/abi/${contractName}/info.json`;
     }
@@ -64,7 +71,7 @@ export const cdnAbiConfigUrl = (contractName: string, fullAddress = true) : stri
 
 export const cdnAbiUrl = (contractName: string, config: AbiConfig, fullAddress = true): string => {
     if (fullAddress) {
-        return `${SEASCAPE_CDN}abi/${contractName}/${config.version.toString()}.json`;
+        return `${cdnUrl()}abi/${contractName}/${config.version.toString()}.json`;
     } else {
         return `/abi/${contractName}/${config.version.toString()}.json`;
     }
