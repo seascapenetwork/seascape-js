@@ -1,62 +1,42 @@
 "use strict";
 exports.__esModule = true;
-exports.validateConfNetwork = exports.defaultAbiConfig = exports.cdnAbiUrl = exports.cdnAbiConfigUrl = exports.cdnConfigUrl = exports.cdnUrl = void 0;
-var SEASCAPE_CDN = 'https://cdn.seascape.network/';
-var cdnUrl = function () {
-    if (global.host !== undefined) {
-        return global.cdnHost;
+exports.cdnWriteAbiUrl = exports.cdnReadAbiUrl = exports.cdnWriteAbiConfigUrl = exports.cdnReadAbiConfigUrl = exports.cdnConfigUrl = exports.cdnBucket = exports.cdnUrl = void 0;
+var SEASCAPE_CDN = 'https://cdn.seascape.network';
+var SEASCAPE_TEMP_CDN = 'https://cdn-temp.seascape.network';
+var SEASCAPE_CDN_BUCKET = 'seascape-cdn';
+var SEASCAPE_TEMP_CDN_BUCKET = 'seascape-cdn-temp';
+var cdnUrl = function (temp) {
+    if (!temp) {
+        return SEASCAPE_CDN;
     }
-    return SEASCAPE_CDN;
+    return SEASCAPE_TEMP_CDN;
 };
 exports.cdnUrl = cdnUrl;
+var cdnBucket = function (temp) {
+    if (!temp) {
+        return SEASCAPE_CDN_BUCKET;
+    }
+    return SEASCAPE_TEMP_CDN_BUCKET;
+};
+exports.cdnBucket = cdnBucket;
 var cdnConfigUrl = function (path) {
-    return "".concat((0, exports.cdnUrl)()).concat(path.project, "/").concat(path.env, "/config.json");
+    return "".concat((0, exports.cdnUrl)(path.temp), "/").concat(path.project, "/").concat(path.env, "/config.json");
 };
 exports.cdnConfigUrl = cdnConfigUrl;
-var cdnAbiConfigUrl = function (contractName, fullAddress) {
-    if (fullAddress === void 0) { fullAddress = true; }
-    if (fullAddress) {
-        return "".concat((0, exports.cdnUrl)(), "abi/").concat(contractName, "/info.json");
-    }
-    else {
-        return "/abi/".concat(contractName, "/info.json");
-    }
+var cdnReadAbiConfigUrl = function (name, temp) {
+    return "".concat((0, exports.cdnUrl)(temp), "/abi/").concat(name, "/info.json");
 };
-exports.cdnAbiConfigUrl = cdnAbiConfigUrl;
-var cdnAbiUrl = function (contractName, config, fullAddress) {
-    if (fullAddress === void 0) { fullAddress = true; }
-    if (fullAddress) {
-        return "".concat((0, exports.cdnUrl)(), "abi/").concat(contractName, "/").concat(config.version.toString(), ".json");
-    }
-    else {
-        return "/abi/".concat(contractName, "/").concat(config.version.toString(), ".json");
-    }
+exports.cdnReadAbiConfigUrl = cdnReadAbiConfigUrl;
+var cdnWriteAbiConfigUrl = function (name) {
+    return "/abi/".concat(name, "/info.json");
 };
-exports.cdnAbiUrl = cdnAbiUrl;
-var defaultAbiConfig = function () {
-    return {
-        version: 0
-    };
+exports.cdnWriteAbiConfigUrl = cdnWriteAbiConfigUrl;
+var cdnReadAbiUrl = function (temp, config) {
+    return "".concat((0, exports.cdnUrl)(temp), "/abi/").concat(config.name(), "/").concat(config.version().toString(), ".json");
 };
-exports.defaultAbiConfig = defaultAbiConfig;
-var validateConfNetwork = function (networkId) {
-    if (global.seascapeCdnConfig === undefined || global.seascapeCdnConfig === null) {
-        console.log({
-            error_path: 'src/utils/config.validateConfNetwork',
-            line: 'no_config',
-            message: "Please define global file"
-        });
-        return false;
-    }
-    if (global.seascapeCdnConfig[networkId] === undefined || global.seascapeCdnConfig[networkId] === null) {
-        console.log({
-            error_path: 'src/utils/config.validateConfNetwork',
-            line: 'no_network_id',
-            message: "Invalid network id '".concat(networkId, "'")
-        });
-        return false;
-    }
-    return true;
+exports.cdnReadAbiUrl = cdnReadAbiUrl;
+var cdnWriteAbiUrl = function (config) {
+    return "/abi/".concat(config.name(), "/").concat(config.version().toString(), ".json");
 };
-exports.validateConfNetwork = validateConfNetwork;
+exports.cdnWriteAbiUrl = cdnWriteAbiUrl;
 //# sourceMappingURL=util.js.map

@@ -92,6 +92,9 @@ var loadRemote = function (url, noError) {
                         })];
                 case 1:
                     res = _a.sent();
+                    if (typeof (res.data) !== 'object') {
+                        throw "Invalid JSON was fetched from '".concat(url, "'. Please make sure that it's in the JSON format");
+                    }
                     return [2 /*return*/, res.data];
                 case 2:
                     error_1 = _a.sent();

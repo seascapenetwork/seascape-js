@@ -146,36 +146,44 @@ var initConfig = function (configPath, empty) {
     });
 };
 exports.initConfig = initConfig;
-var abiConfig = function (smartcontractName) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, config;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                url = (0, util_1.cdnAbiConfigUrl)(smartcontractName);
-                return [4 /*yield*/, (0, json_1.loadRemote)(url, true)];
-            case 1:
-                config = _a.sent();
-                if (config === false) {
-                    return [2 /*return*/, (0, util_1.defaultAbiConfig)()];
-                }
-                else {
-                    return [2 /*return*/, config];
-                }
-                return [2 /*return*/];
-        }
+var abiConfig = function (smartcontractName, temp) {
+    if (temp === void 0) { temp = false; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var fullAddressParam, url, config;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fullAddressParam = { fullAddress: false, temp: temp };
+                    url = (0, util_1.cdnAbiConfigUrl)(smartcontractName, fullAddressParam);
+                    return [4 /*yield*/, (0, json_1.loadRemote)(url, true)];
+                case 1:
+                    config = _a.sent();
+                    if (config === false) {
+                        return [2 /*return*/, (0, util_1.defaultAbiConfig)()];
+                    }
+                    else {
+                        return [2 /*return*/, config];
+                    }
+                    return [2 /*return*/];
+            }
+        });
     });
-}); };
+};
 exports.abiConfig = abiConfig;
-var abi = function (contractName, config) { return __awaiter(void 0, void 0, void 0, function () {
-    var url;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                url = (0, util_1.cdnAbiUrl)(contractName, config);
-                return [4 /*yield*/, (0, json_1.loadRemote)(url)];
-            case 1: return [2 /*return*/, _a.sent()];
-        }
+var abi = function (contractName, config, temp) {
+    if (temp === void 0) { temp = false; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var fullAddressParam, url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fullAddressParam = { fullAddress: false, temp: temp };
+                    url = (0, util_1.cdnAbiUrl)(contractName, config, fullAddressParam);
+                    return [4 /*yield*/, (0, json_1.loadRemote)(url)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
     });
-}); };
+};
 exports.abi = abi;
 //# sourceMappingURL=read.js.map

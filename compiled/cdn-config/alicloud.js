@@ -39,30 +39,22 @@ exports.__esModule = true;
 exports.uploadAbi = exports.uploadAbiConfig = exports.uploadConfig = exports.connectionByEnvironment = exports.connection = void 0;
 var OSS = require('ali-oss');
 var util_1 = require("./util");
-var connection = function (region, accessId, secret, bucket) { return __awaiter(void 0, void 0, void 0, function () {
+var connection = function (temp, accessId, secret) { return __awaiter(void 0, void 0, void 0, function () {
+    var client;
     return __generator(this, function (_a) {
-        try {
-            return [2 /*return*/, new OSS({
-                    region: region,
-                    accessKeyId: accessId,
-                    accessKeySecret: secret,
-                    bucket: bucket
-                })];
-        }
-        catch (error) {
-            console.error(error);
-            return [2 /*return*/, undefined];
-        }
-        return [2 /*return*/];
+        client = new OSS({
+            accessKeyId: accessId,
+            accessKeySecret: secret,
+            cname: true,
+            endpoint: (0, util_1.cdnUrl)(temp)
+        });
+        client.useBucket((0, util_1.cdnBucket)(temp));
+        return [2 /*return*/, client];
     });
 }); };
 exports.connection = connection;
-var connectionByEnvironment = function () { return __awaiter(void 0, void 0, void 0, function () {
+var connectionByEnvironment = function (temp) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        if (!process.env.ALIBABA_REGION) {
-            console.error("Missing ALIBABA_REGION env. variable");
-            return [2 /*return*/, undefined];
-        }
         if (!process.env.ALIBABA_ACCESSID) {
             console.error("Missing ALIBABA_ACCESSID env. variable");
             return [2 /*return*/, undefined];
@@ -71,26 +63,22 @@ var connectionByEnvironment = function () { return __awaiter(void 0, void 0, voi
             console.error("Missing ALIBABA_SECRET env. variable");
             return [2 /*return*/, undefined];
         }
-        if (!process.env.ALIBABA_BUCKET) {
-            console.error("Missing ALIBABA_BUCKET env. variable");
-            return [2 /*return*/, undefined];
-        }
-        return [2 /*return*/, (0, exports.connection)(process.env.ALIBABA_REGION, process.env.ALIBABA_ACCESSID, process.env.ALIBABA_SECRET, process.env.ALIBABA_BUCKET)];
+        return [2 /*return*/, (0, exports.connection)(temp, process.env.ALIBABA_ACCESSID, process.env.ALIBABA_SECRET)];
     });
 }); };
 exports.connectionByEnvironment = connectionByEnvironment;
-function uploadConfig(path, oss, config) {
+function uploadConfig(oss, config) {
     return __awaiter(this, void 0, void 0, function () {
         var str, buff, result, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    str = JSON.stringify(config, null, 4);
+                    str = config.toString();
                     buff = Buffer.alloc(str.length, str);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, oss.put("/".concat(path.project, "/").concat(path.env, "/config.json"), buff)];
+                    return [4 /*yield*/, oss.put("/".concat(config.projectPath().project, "/").concat(config.projectPath().env, "/config.json"), buff)];
                 case 2:
                     result = _a.sent();
                     return [2 /*return*/, result];
@@ -104,15 +92,15 @@ function uploadConfig(path, oss, config) {
     });
 }
 exports.uploadConfig = uploadConfig;
-function uploadAbiConfig(oss, smartcontractName, config) {
+function uploadAbiConfig(oss, name, config) {
     return __awaiter(this, void 0, void 0, function () {
         var str, buff, url, result, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    str = JSON.stringify(config, null, 4);
+                    str = config.toString();
                     buff = Buffer.alloc(str.length, str);
-                    url = (0, util_1.cdnAbiConfigUrl)(smartcontractName, false);
+                    url = (0, util_1.cdnWriteAbiConfigUrl)(name);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
@@ -130,7 +118,7 @@ function uploadAbiConfig(oss, smartcontractName, config) {
     });
 }
 exports.uploadAbiConfig = uploadAbiConfig;
-function uploadAbi(oss, smartcontractName, config, abi) {
+function uploadAbi(oss, config, abi) {
     return __awaiter(this, void 0, void 0, function () {
         var str, buff, url, result, error_3;
         return __generator(this, function (_a) {
@@ -138,7 +126,7 @@ function uploadAbi(oss, smartcontractName, config, abi) {
                 case 0:
                     str = JSON.stringify(abi, null, 4);
                     buff = Buffer.alloc(str.length, str);
-                    url = (0, util_1.cdnAbiUrl)(smartcontractName, config, false);
+                    url = (0, util_1.cdnWriteAbiUrl)(config);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
