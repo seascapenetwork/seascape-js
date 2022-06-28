@@ -6,6 +6,12 @@ const SEASCAPE_TEMP_CDN = 'https://cdn-temp.seascape.network';
 const SEASCAPE_CDN_BUCKET = 'seascape-cdn';
 const SEASCAPE_TEMP_CDN_BUCKET = 'seascape-cdn-temp';
 
+export interface FullAddressParam {
+    name: string,
+    fullAddress: boolean,
+    temp?: boolean
+}
+
 export interface SmartcontractConfig {
     name: string,
     abi: string,
@@ -18,7 +24,9 @@ export interface SmartcontractConfig {
 
 export interface ConfigPath {
     project: string,
-    env: string
+    env: string,
+    empty: boolean,
+    temp?: boolean
 }
 
 export interface SmartcontractPath {
@@ -52,8 +60,6 @@ export interface TruffleConfig {
     fund?: string
 }
 
-export interface AbiConfig {
-    version: number
 export const cdnUrl = function (temp: any): string {
     if (!temp) {
         return SEASCAPE_CDN;
@@ -69,49 +75,22 @@ export const cdnBucket = function (temp: any): string {
 }
 
 export let cdnConfigUrl = (path: ConfigPath): string => {
-    return `${cdnUrl()}${path.project}/${path.env}/config.json`;
+    return `${cdnUrl(path.temp)}/${path.project}/${path.env}/config.json`;
 }
 
-export const cdnAbiConfigUrl = (contractName: string, fullAddress = true) : string => {
-    if (fullAddress) {
-        return `${cdnUrl()}abi/${contractName}/info.json`;
-    } else {
-        return `/abi/${contractName}/info.json`;
-    }
+export const cdnReadAbiConfigUrl = (name: string, temp: Boolean) : string => {
+    return `${cdnUrl(temp)}/abi/${name}/info.json`;
 }
 
-export const cdnAbiUrl = (contractName: string, config: AbiConfig, fullAddress = true): string => {
-    if (fullAddress) {
-        return `${cdnUrl()}abi/${contractName}/${config.version.toString()}.json`;
-    } else {
-        return `/abi/${contractName}/${config.version.toString()}.json`;
-    }
+export const cdnWriteAbiConfigUrl = (name: string) : string => {
+    return `/abi/${name}/info.json`;
 }
 
-export let defaultAbiConfig = () : AbiConfig => {
-    return {
-        version: 0
-    } as AbiConfig;
+export const cdnReadAbiUrl = (temp: Boolean, config: SeascapeAbiConfig): string => {
+    return `${cdnUrl(temp)}/abi/${config.name()}/${config.version().toString()}.json`;
 }
 
-export let validateConfNetwork = (networkId: string): boolean => {
-    if ((global as any).seascapeCdnConfig === undefined || (global as any).seascapeCdnConfig === null) {
-        console.log({
-            error_path: 'src/utils/config.validateConfNetwork',
-            line: 'no_config',
-            message: `Please define global file`
-        });
-        return false;
-    }
-
-    if ((global as any).seascapeCdnConfig[networkId] === undefined || (global as any).seascapeCdnConfig[networkId] === null) {
-        console.log({
-            error_path: 'src/utils/config.validateConfNetwork',
-            line: 'no_network_id',
-            message: `Invalid network id '${networkId}'`
-        });
-        return false;
-    }
-
-    return true;
+export const cdnWriteAbiUrl = (config: SeascapeAbiConfig): string => {
+    return `/abi/${config.name()}/${config.version().toString()}.json`;
 }
+
