@@ -32,11 +32,11 @@ export const connectionByEnvironment = async (temp: Boolean) => {
     );
 }
 
-export async function uploadConfig(path: ConfigPath, oss: any, config: any) {
-    let str = JSON.stringify(config, null, 4);
+export async function uploadConfig(oss: any, config: SeascapeCdnConfig) {
+    let str = config.toString();
     let buff = Buffer.alloc(str.length, str);
     try {
-        const result = await oss.put(`/${path.project}/${path.env}/config.json`, buff);
+        const result = await oss.put(`/${config.projectPath().project}/${config.projectPath().env}/config.json`, buff);
         return result;
     } catch (error) {
         console.error(error);
@@ -44,11 +44,11 @@ export async function uploadConfig(path: ConfigPath, oss: any, config: any) {
     }
 }
 
-export async function uploadAbiConfig(oss: any, smartcontractName: string, config: AbiConfig) {
-    let str = JSON.stringify(config, null, 4);
+export async function uploadAbiConfig(oss: any, name: string, config: SeascapeAbiConfig) {
+    let str = config.toString();
     let buff = Buffer.alloc(str.length, str);
 
-    let url = cdnAbiConfigUrl(smartcontractName, false);
+    let url = cdnWriteAbiConfigUrl(name);
 
     try {
         const result = await oss.put(url, buff);
@@ -59,11 +59,11 @@ export async function uploadAbiConfig(oss: any, smartcontractName: string, confi
     }
 }
 
-export async function uploadAbi(oss: any, smartcontractName: string, config: AbiConfig, abi: Object) {
+export async function uploadAbi(oss: any, config: SeascapeAbiConfig, abi: Object) {
     let str = JSON.stringify(abi, null, 4);
     let buff = Buffer.alloc(str.length, str);
 
-    let url = cdnAbiUrl(smartcontractName, config, false);
+    let url = cdnWriteAbiUrl(config);
 
     try {
         const result = await oss.put(url, buff);

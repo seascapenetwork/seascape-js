@@ -5,189 +5,80 @@
  * For updating the config modules, please use the /src/cdn-config/write.ts
  */
 
-import { SmartcontractConfig, ConfigPath, SmartcontractPath, HardhatSmartcontractConfig, AbiConfig, cdnAbiUrl, TruffleConfig } from './util';
-import { contractIndex, abiConfig as getAbiConfig, initConfig, abi } from './read';
-import { uploadConfig, uploadAbiConfig, connection, connectionByEnvironment, uploadAbi } from './alicloud';
-import { abiFile as hardhatAbiFile } from './../utils/hardhat';
+import { SmartcontractConfig, ConfigPath, SmartcontractPath, HardhatSmartcontractConfig, TruffleConfig } from './util';
+import { connection, connectionByEnvironment } from './alicloud';
+import { abiFile as hardhatAbiFile } from '../utils/hardhat';
+import SeascapeCdnConfig from './seascape-cdn-config';
+import SeascapeAbiConfig from './seascape-abi-config';
+import SeascapeAbi from './seascape-abi';
+import { CdnUtil } from '..';
 
-export const setSmartcontract = async (path: ConfigPath, cdnClient: any, smartcontractPath: SmartcontractPath, obj: SmartcontractConfig) => {
-    if ((global as any).seascapeCdnConfig === undefined || (global as any).seascapeCdnConfig === null) {
-        console.log({
-            error_path: 'src/cdn-config/write.setSmartcontract',
-            line: 'no_config',
-            message: `Please define global file`
-        });
+
+let setSmartcontract = async(temp: Boolean, contractName: string, abi: any, configPath: ConfigPath, smartcontractPath: SmartcontractPath, smartcontract: SmartcontractConfig) => {
+    let client = await connectionByEnvironment(temp);
+    if (client === undefined) {
         return false;
     }
 
-    let idString = smartcontractPath.networkId.toString();
-    let type = smartcontractPath.type;
+    let abiConfig = await SeascapeAbiConfig.New(temp, contractName);
+    await abiConfig.incrementVersion(client);
 
-    if (!(global as any).seascapeCdnConfig[idString]) {
-        (global as any).seascapeCdnConfig[idString] = {};
-    }
+    smartcontract.abi = CdnUtil.cdnReadAbiUrl(temp, abiConfig);
+    await SeascapeAbi.SetAbi(client, abiConfig, abi);
 
-    if (!(global as any).seascapeCdnConfig[idString][type]) {
-        (global as any).seascapeCdnConfig[idString][type] = [];
-    }
-
-    let i = contractIndex(idString, type, obj.name);
-    if (i === false) {
-        (global as any).seascapeCdnConfig[idString][type].push(obj);
-    } else {
-        (global as any).seascapeCdnConfig[idString][type][i] = obj;
-    }
-
-    let uploaded = await uploadConfig(path, cdnClient, (global as any).seascapeCdnConfig);
-    if (uploaded === null) {
-        console.log({
-            error_path: 'src/cdn-config/write.setSmartcontract',
-            line: 'no_upload',
-            message: `Please fix the Alicloud credentials`
-        });
-        return false;
-    }
-    return true;
-};
-
-export const setAbiConfig = async (cdnClient: any, smartcontractName: string, abiConfig: AbiConfig) => {
-    let uploaded = await uploadAbiConfig(cdnClient, smartcontractName, abiConfig);
-    if (uploaded === null) {
-        console.log({
-            error_path: 'src/cdn-config/write.setAbiConfig',
-            line: 'no_upload',
-            message: `Please fix the Alicloud credentials`
-        });
-        return false;
-    }
-    return true;
-};
-
-export const setAbi = async (cdnClient: any, smartcontractName: string, abiConfig: AbiConfig, abi: Object) => {
-    let uploaded = await uploadAbi(cdnClient, smartcontractName, abiConfig, abi);
-    if (uploaded === null) {
-        console.log({
-            error_path: 'src/cdn-config/write.setAbi',
-            line: 'no_upload',
-            message: `Please fix the Alicloud credentials`
-        });
-        return false;
-    }
-    return true;
-};
-
-export const incrementAbiConfiguration = async (client: any, smartcontractName: string) => {
-    let abiConfig = await getAbiConfig(smartcontractName);
-    abiConfig.version++;
-
-    let abiUpdated = await setAbiConfig(client, smartcontractName, abiConfig);
-    if (!abiUpdated) {
-        console.error(`Abi config wasn't updated.`);
-        return false;
-    }
-
-    return abiConfig;
+    let seascapeCdnConfig = await SeascapeCdnConfig.New(configPath);
+    return await seascapeCdnConfig.setSmartcontract(client, smartcontractPath, smartcontract);
 }
 
 
 /**
- * 
  * @param params Object containing the following parameters
  */
-export const setHardhatSmartcontract = async (params: HardhatSmartcontractConfig) => {
-    let client = await connectionByEnvironment();
-    if (client === undefined) {
-        return false;
-    }
-
-    let abiConfig = await incrementAbiConfiguration(client, params.contractName);
-    console.log('after the function')
-    console.log(abiConfig)
-
-    let abi = await hardhatAbiFile(params.contractName);
-    if (!abi) {
-        console.log(`Failed to load the abi of ${params.contractName} in hardhat framework. Please upload manually as ${abiConfig.version}`);
-        return false;
-    }
-    let abiSetted = await setAbi(client, params.contractName, abiConfig, abi);
-    if (!abiSetted) {
-        return false;
-    }
-
-    let path = {project: params.projectName, env: params.projectEnv} as ConfigPath;
-
+export const setHardhatSmartcontract = async (temp: Boolean, params: HardhatSmartcontractConfig) => {
+    let configPath = {project: params.projectName, env: params.projectEnv, empty: true} as ConfigPath;
     let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
-
-    let initialized = await initConfig(path, true);
-    if (!initialized) {
-        console.log(`Global initializiation failed`);
-        process.exit(1);
-    } 
-
     let smartcontract = {
         name: params.contractName,
         address: params.deployedInstance.address,
         txid: params.deployedInstance.deployTransaction.hash,
-        abi: cdnAbiUrl(params.contractName, abiConfig, true),
+        abi: "",
+        owner: params.owner? params.owner : "",
+        verifier: params.verifier? params.verifier : "",
+        fund: params.fund? params.fund : ""
     } as SmartcontractConfig;
-    if (params.owner) {
-        smartcontract.owner = params.owner;
-    }
-    if (params.verifier) {
-        smartcontract.verifier = params.verifier;
-    }
-    if (params.fund) {
-        smartcontract.fund = params.fund;
+
+    let abi = await hardhatAbiFile(params.contractName);
+    if (!abi) {
+        console.log(`Failed to load the abi of ${params.contractName} in hardhat framework`);
+        return false;
     }
 
-    let updated = await setSmartcontract(path, client, smartcontractPath, smartcontract);
-
-    return updated;
+    return setSmartcontract(temp, params.contractName, abi, configPath, smartcontractPath, smartcontract);
 }
 
-export const setTruffleSmartcontract = async (params: TruffleConfig) => {
-    let client = await connectionByEnvironment();
-    if (client === undefined) {
-        return false;
-    }
-
-    let abiConfig = await incrementAbiConfiguration(client, params.contractName);
-
-    let abiSetted = await setAbi(client, params.contractName, abiConfig, params.contractAbi);
-    if (!abiSetted) {
-        return false;
-    }
-
-    let path = {project: params.projectName, env: params.projectEnv} as ConfigPath;
-
+/**
+ * Order in which data is updated:
+ * - Set the Abi Configuration, Abi URL depends on the Abi Configuration
+ * - Set the Abi, CDN Config requires the URL of the Abi
+ * - Set the CDN Config
+ * @param params 
+ * @param temp 
+ * @returns 
+ */
+export const setTruffleSmartcontract = async (temp: Boolean, params: TruffleConfig) => {
+    let configPath = {project: params.projectName, env: params.projectEnv, empty: true} as ConfigPath;
     let smartcontractPath = {networkId: params.networkId, type: params.contractType} as SmartcontractPath;
-
-    let initialized = await initConfig(path, true);
-    if (!initialized) {
-        console.log(`Global initializiation failed`);
-        process.exit(1);
-    } 
-
     let smartcontract = {
         name: params.contractName,
         address: params.contractAddress,
         txid: params.txid,
-        abi: cdnAbiUrl(params.contractName, abiConfig, true),
+        abi: "",
+        owner: params.owner? params.owner : "",
+        verifier: params.verifier? params.verifier : "",
+        fund: params.fund? params.fund : ""
     } as SmartcontractConfig;
 
-    if (params.owner) {
-        smartcontract.owner = params.owner;
-    }
-    if (params.verifier) {
-        smartcontract.verifier = params.verifier;
-    }
-    if (params.fund) {
-        smartcontract.fund = params.fund;
-    }
-
-    let updated = await setSmartcontract(path, client, smartcontractPath, smartcontract);
-
-    return updated;
+    return setSmartcontract(temp, params.contractName, params.contractAbi, configPath, smartcontractPath, smartcontract);
 }
 
 export const connectCdn = connection;
