@@ -1,25 +1,21 @@
 const OSS = require('ali-oss');
-import { ConfigPath, cdnAbiConfigUrl, cdnAbiUrl, AbiConfig } from './util';
+import { ConfigPath, cdnBucket, cdnUrl, cdnWriteAbiUrl, cdnWriteAbiConfigUrl } from './util';
+import SeascapeAbiConfig from './seascape-abi-config';
+import SeascapeCdnConfig from './seascape-cdn-config';
 
-export const connection = async (region: any, accessId: any, secret: any, bucket: any) => {
-    try {
-        return new OSS({
-            region: region,
-            accessKeyId: accessId,
-            accessKeySecret: secret,
-            bucket: bucket,
-        });
-    } catch (error) {
-        console.error(error);
-        return undefined;
-    }
+export const connection = async (temp: Boolean, accessId: any, secret: any) => {
+    let client = new OSS({
+        accessKeyId: accessId,
+        accessKeySecret: secret,
+        cname: true,
+        endpoint: cdnUrl(temp)
+    });
+    client.useBucket(cdnBucket(temp));
+
+    return client;
 }
 
-export const connectionByEnvironment = async () => {
-    if (!process.env.ALIBABA_REGION) {
-        console.error(`Missing ALIBABA_REGION env. variable`);
-        return undefined;
-    }
+export const connectionByEnvironment = async (temp: Boolean) => {
     if (!process.env.ALIBABA_ACCESSID) {
         console.error(`Missing ALIBABA_ACCESSID env. variable`);
         return undefined;
@@ -28,16 +24,11 @@ export const connectionByEnvironment = async () => {
         console.error(`Missing ALIBABA_SECRET env. variable`);
         return undefined;
     }
-    if (!process.env.ALIBABA_BUCKET) {
-        console.error(`Missing ALIBABA_BUCKET env. variable`);
-        return undefined;
-    }
 
     return connection(
-        process.env.ALIBABA_REGION, 
+        temp, 
         process.env.ALIBABA_ACCESSID, 
-        process.env.ALIBABA_SECRET,
-        process.env.ALIBABA_BUCKET
+        process.env.ALIBABA_SECRET
     );
 }
 

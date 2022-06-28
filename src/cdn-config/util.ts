@@ -1,4 +1,10 @@
-const SEASCAPE_CDN = 'https://cdn.seascape.network/';
+import SeascapeAbiConfig from './seascape-abi-config';
+
+const SEASCAPE_CDN = 'https://cdn.seascape.network';
+const SEASCAPE_TEMP_CDN = 'https://cdn-temp.seascape.network';
+
+const SEASCAPE_CDN_BUCKET = 'seascape-cdn';
+const SEASCAPE_TEMP_CDN_BUCKET = 'seascape-cdn-temp';
 
 export interface SmartcontractConfig {
     name: string,
@@ -48,13 +54,18 @@ export interface TruffleConfig {
 
 export interface AbiConfig {
     version: number
+export const cdnUrl = function (temp: any): string {
+    if (!temp) {
+        return SEASCAPE_CDN;
+    }
+    return SEASCAPE_TEMP_CDN;
 }
 
-export const cdnUrl = function (): string {
-    if ((global as any).host !== undefined) {
-        return (global as any).cdnHost;
+export const cdnBucket = function (temp: any): string {
+    if (!temp) {
+        return SEASCAPE_CDN_BUCKET;
     }
-    return SEASCAPE_CDN;
+    return SEASCAPE_TEMP_CDN_BUCKET;
 }
 
 export let cdnConfigUrl = (path: ConfigPath): string => {
