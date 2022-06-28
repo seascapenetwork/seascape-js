@@ -45,6 +45,9 @@ export const loadRemote = async (url: string, noError = false) => {
             url: url,
             responseType: 'json'
         });
+        if (typeof(res.data) !== 'object') {
+            throw `Invalid JSON was fetched from '${url}'. Please make sure that it's in the JSON format`;
+        }
         return res.data;
     } 
     catch (error) {
