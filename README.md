@@ -2,19 +2,25 @@
 Seascape JS is the Node.js module written in Typescript. 
 
 Features:
-* Generate the Proof of Server for the data that user submits to the blockchain.
-* Convert the Javscript/Typescript type to the blockchain type.
-* More developer friendly smartcontract interaction.
+* Generate the Proof of Server for the data that the user submits to the blockchain.
+* Convert the Javascript/Typescript type to the blockchain type.
+* More developer-friendly smartcontract interaction.
 
 Upcoming features:
-* Connect to the list of the Smartcontracts.
+* Connect to the list of the smartcontracts.
 * Generate the Proof of Server using Vault.
 * APR calculation of the DeFi staking.
 * Fetch the price of any token or blockchain in USD dollars.
 * Wallet connection on the browser.
 * Walletless connection to the browser.
+* Add the browserify in the future to enable it in the browsers.
 
-The following of the document is divided into two sections. The first section is for users, who wants to use Seascape JS in their product. The second section is for users who wants to contribute to Seascape JS.
+```
+browserify -t brfs --standalone seascape src/seascape.js -o dist/seascape.js
+```
+
+
+The following document is divided into two sections. The first section is for users, who want to use Seascape JS in their product. The second section is for users who want to contribute to Seascape JS.
 
 ---
 
@@ -110,7 +116,7 @@ import { SmartcontractData, SmartcontractDataTypes as TYPE, Verifier } from "sea
 ```
 
 ## CDN Config
-CDN config is handling the information about the abi, address of the smartcontracts.
+CDN config is handling the information about the abi, and address of the smartcontracts.
 
 The structure of the configuration:
 ```json
@@ -126,10 +132,10 @@ The structure of the configuration:
     }
 }
 ```
-`"1"` is the network id. In our case it's the Ethereum Mainnet.
-Each network has the group of smartcontracts. "erc20" is the group of ERC20 Tokens. The group is the list of config objects.
-Each config object has `name`, `address`, `abi` fields required. 
-Additionally, developer can add the following optional parameters:
+`"1"` is the network id. In our case, it's the Ethereum Mainnet.
+Each network has a group of smartcontracts. "erc20" is the group of ERC20 Tokens. The group is the list of config objects.
+Each config object has `name`, `address`, and `abi` fields required. 
+Additionally, the developer can add the following optional parameters:
 
 * `txid` &ndash; transaction when it was deployed.
 * `owner` &ndash; owner of the smartcontract.
@@ -139,68 +145,89 @@ Additionally, developer can add the following optional parameters:
 ---
 
 ## Hardhat framework CDN update
-Upload the smartcontract address and abi to the Seascape CDN after smartcontract deployment in [hardhat](https://hardhat.org/) framework.
+The following steps explain how to use `SeascapeJS` with [hardhat](https://hardhat.org/) framework. 
+Upload the smartcontract address and abi to the Seascape CDN after smartcontract deployment.
 
-> It uploads the smartcontract address and the ABI to the Seascape CDN.
+> Requires knowledge of the Hardhat framework
 
-In the hardhat framework, install the `seascape`.
-Then add the following lines to the deploying script:
+* In the hardhat framework, install the `seascape`.
+
+```npm install seascape```
+
+* Then in the script that deploys the smartcontract make it similar to the example below.
 
 ```typescript
-// On top import the `CdnWrite` module.
-// Add the following .env variables
-//  ALIBABA_REGION=
-//  ALIBABA_ACCESSID=
-//  ALIBABA_SECRET=
-//  ALIBABA_BUCKET=
-import { CdnWrite } from "seascape";
+import { ethers } from "hardhat";
+let seascape = require("seascape");
 
-//
-// ... the rest of the code.
-//
+async function main() {
+    // Smartcontract name should be same as Smartcontract name that you deploy.
+    let smartcontractName = 'Greeter';
+    const Greeter = await ethers.getContractFactory(smartcontractName);
+    const greeter = await Greeter.deploy("Hello, Hardhat and Seascape JS!");
+    // Get the transaction id.
+    await greeter.deployed();
+    console.log("Greeter deployed to:", greeter.address);
 
-// Smartcontract name should be same as Smartcontract name that you deploy.
-let smartcontractName = 'Greeter';
-const Greeter = await ethers.getContractFactory(smartcontractName);
+    // Project name: 'greeter'
+    // Project environment: 'beta'
+    // If the project doesn't have any configuration on CDN, we create an empty one. If you set the third argument to false, then it will throw an error.
+    // If you set the last argument to false, it will connect to https://cdn.seascape.network. If you set the last argument to true, it will connect to https://cdn-temp.seascape.network. Cdn-temp is used for development phase.
+    let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, false);
 
-const greeter = await Greeter.deploy("Hello, Hardhat and Seascape JS!");
+    const addresses = await ethers.getSigners();
+    let networkId = await addresses[0].getChainId();
+    // network id where the smartcontract is deployed
+    // the smartcontract category within the project
+    let smartcontractPath = new seascape.CdnUtil.SmartcontractPath(networkId, 'main');
 
-const addresses = await ethers.getSigners();
-let networkId = await addresses[0].getChainId();
+    // smartcontract name, address and deployment transaction hash.
+    // the last argument is the abi. 
+    // for hardhat framework we set it in a different way
+    let smartcontract = new seascape.CdnUtil.SmartcontractConfig(
+        smartcontractName,
+        greeter.address,
+        greeter.deployTransaction.hash,
+        ""
+    );
 
-// Get the transaction id.
-await greeter.deployed();
+    let abi = await seascape.utils.hardhatAbiFile(smartcontractName);
+    if (!abi) {
+        console.log(`Failed to load the abi of ${smartcontractName} in hardhat framework`);
+        return false;
+    } else {
+        smartcontract.abi = abi;
+    }
 
-// the cdn should be available at
-// https://cdn.seascape.network/greeter/beta/config.json
-let cdnUpdated = CdnWrite.setHardhatSmartcontract({
-    networkId: networkId,
-    projectName: 'greeter', 
-    projectEnv: 'beta', 
-    contractType: 'main', 
-    contractName: smartcontractName, 
-    deployedInstance: greeter
+    let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
+    if (!cdnUpdated) {
+        console.log("Please update the cdn");
+    }
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
 });
 
-console.log("Greeter deployed to:", greeter.address);
-if (!cdnUpdated) {
-    console.log("Please update the cdn");
-}
 ```
 
 ## Truffle framework CDN update
-Upload the smartcontract address and abi to the Seascape CDN after smartcontract deployment in [truffle](https://trufflesuite.com/truffle/) framework.
+The following steps demonstrates how to use `SeascapeJS` with [truffle](https://trufflesuite.com/truffle/) framework.
+It will upload the smartcontract address and smartcontract ABI to the Seascape CDN.
 
-* Import the 'seascape' into the project:
+* In your truffle project, import 'seascape' Node package into the project:
 ```bash
 npm install seascape
 ```
 
-* Add the `.env` based on the [seascape-js/.example.env](https://github.com/blocklords/seascape-js/blob/main/.example.env).
+* Create the `.env` based on the [seascape-js/.example.env](https://github.com/blocklords/seascape-js/blob/main/.example.env).
 
-* In the migrations file import the `CdnWrite`
+* Truffle uses migrations to deploy the smartcontracts, therefore we need to import `seascape` package into it.
 ```javascript
-let { CdnWrite } = require('seascape');
+let seascape = require('seascape');
 
 ```
 
@@ -208,31 +235,41 @@ let { CdnWrite } = require('seascape');
 
 ```javascript
 const MetaCoin = artifacts.require("MetaCoin");
-let { CdnWrite } = require("seascape");
+let seascape = require("seascape");
 
 module.exports = async function(deployer) {
+    // deploying the smartcontract
     await deployer.deploy(MetaCoin);
+    console.log(`MetaCoin was deployed on ${MetaCoin.address}`);
 
-    // The CDN will be available at
-    // https://cdn.seascape.network/<projectName>/<projectEnv>/config.json
-    //
-    // In our case:
-    // https://cdn.seascape.network/greeter/beta/config.sjon
-    let truffleParams = {
-        projectName: 'greeter',
-        projectEnv: 'beta',
-        networkId: await deployer.network_id,
-        txid: MetaCoin.transactionHash,
-        contractName: 'MetaCoin',
-        contractType: 'main',
-        contractAbi: MetaCoin.abi,
-        contractAddress: MetaCoin.address,
-        owner: deployer.address
-    };
+    // then updating the CDN
+    // project name is greeter
+    // project environment is beta
+    // if the Configuration file wasn't created we create an empty one
+    // the last argument is true, if you use https://cdn-temp.seascape.network/ for development.
+    // the last argument is false, if you use https://cdn.seascape.network/.
+    let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, false);
 
-    let cdnUpdated = await seascape.CdnWrite.setTruffleSmartcontract(truffleParams);
-  
-    console.log(`Deployed successfully`);
+    // Inside the Configuration file, what is the network id.
+    // and smartcontract category
+    let smartcontractPath = new seascape.CdnUtil.SmartcontractPath(await deployer.network_id, 'main');
+    
+    // smartcontract parameters
+    // name of the smartcontract
+    // the rest of the parameters are set after truffle deploys the smartcontract
+    // address of the smartcontract
+    // transaction id of the deployment
+    // abi object
+    let smartcontract = new seascape.CdnUtil.SmartcontractConfig(
+        'MetaCoin', 
+        MetaCoin.address, 
+        MetaCoin.transactionHash, 
+        MetaCoin.abi
+    );
+
+    // update the CdnConfig, Abi to the Seascape CDN
+    let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
+
     if (cdnUpdated) {
         console.log(`CDN was updated successfully`);
     } else {
@@ -242,51 +279,9 @@ module.exports = async function(deployer) {
 }
 ```
 
-### CDN Update custom
-
-```typescript
-import { CdnRead, CdnWrite, ConfigPath, SmartcontractConfig, SmartcontractPath } from "seascape";
-
-(async () => {
-    let path = {project: 'lighthouse', env: 'beta'} as ConfigPath;
-
-    let initialized = await CdnRead.initConfig(path);
-    if (!initialized) {
-        console.log(`Global initializiation failed`);
-        process.exit(1);
-    } 
-
-    let client = await CdnWrite.connectCdn(
-        process.env.ALIBABA_REGION, 
-        process.env.ALIBABA_ACCESSID, 
-        process.env.ALIBABA_SECRET,
-        process.env.ALIBABA_BUCKET
-    );
-    if (client === undefined) {
-        console.log(`Could not connect to the CDN`);
-        process.exit(2);
-    }
-
-    let smartcontract = {
-        name: "MSCP ALLO",
-        address: "0x93Efe41A6a5377bC1d7DD43412fD14B4bA0134Fb",
-        abi: "no-abi",
-    } as SmartcontractConfig;
-
-    let smartcontractPath = {
-        networkId: 1287,
-        type: 'nfts'
-    } as SmartcontractPath;
-
-    let updated = await CdnWrite.setSmartcontract(path, client, smartcontractPath, smartcontract);
-    console.log(`Was CDN updated successfully? ${updated}`);
-})();
-```
-
----
 # Contribution
 The following part is for the maintainer of this project.
-Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer I want to be able to remember how to work on this project.
+It's mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer I want to be able to remember how to work on this project.
 
 ## Installation
 1. fork this repo.
@@ -301,9 +296,9 @@ Its mostly for me [ahmetson](https://github.com/ahmetson) as the main maintainer
 ```npx tsc```
 
 2. Add the tests.
-3. Add the example of code use in examples folder.
+3. Add the example of code used in the examples folder.
 4. Add the part of the code in README.md.
-5. Update the version in package.json and push it to the github. 
+5. Update the version in package.json and push it to GitHub. 
 6. upload `npm publish`
 
 ## Publishing for contributors
@@ -323,11 +318,11 @@ npx ts-node test/<test file name>
 There are example projects inside the test to see how to update the smartcontract address in the frameworks.
 
 ## Hardhat framework
-The upload of the smartcontract in hardhat framework test is located as a sub project inside the `test/hardhat-project` directory. It should have the `.env` setted up based on the `.example.env`.
+The upload of the smartcontract in the hardhat framework test is located as a sub-project inside the `test/hardhat-project` directory. It should have the `.env` set up based on the `.example.env`.
 
 ## Truffle framework
-In the truffle, the better way to deploy the smartcontracts is using the `truffle migrate` instead the `truffle deploy`. So `seascape` SDK is built for that.
-Truffle uses the Javascript example. Therefore to test the updating the CDN after truffle migration, we should first compile the typescript source code to the javascript module.
+In the truffle, the better way to deploy the smartcontracts is using the `truffle migrate` instead of the `truffle deploy`. So `seascape` SDK is built for that.
+Truffle uses the Javascript example. Therefore to test the updating of the CDN after truffle migration, we should first compile the typescript source code to the javascript module.
 Then to run the migration with CDN update inside the test, change the terminal's directory to the `truffle-project`:
 
 ```bash
@@ -345,7 +340,3 @@ In order to see it in action run the following:
 npx truffle migrate --network rinkeby
 ```
 
-# TODO
-Add the browserify in the future to enable it in the browsers.
-
-```browserify -t brfs --standalone seascape src/seascape.js -o dist/seascape.js`
