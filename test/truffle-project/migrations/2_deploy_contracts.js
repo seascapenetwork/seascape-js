@@ -5,12 +5,13 @@ const seascape = require("../../../compiled/index");
 module.exports = async function(deployer) {
   await deployer.deploy(ConvertLib);
   await deployer.link(ConvertLib, MetaCoin);
-  let metacoin = await deployer.deploy(MetaCoin);
+  await deployer.deploy(MetaCoin);
+  console.log(`'MetaCoin' was deployed successfully at ${MetaCoin.address}`);
 
   let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, true);
   let smartcontractPath = new seascape.CdnUtil.SmartcontractPath(await deployer.network_id, 'main');
 
-  let smartcontract = new seascape.CdnUtil.SmartcontractConfig('MetaCoin', metacoin.address, metacoin.transactionHash, metacoin.abi);
+  let smartcontract = new seascape.CdnUtil.SmartcontractConfig('MetaCoin', MetaCoin.address, MetaCoin.transactionHash, MetaCoin.abi);
   // you can call it
   // smartcontract.owner = "";
   // smartcontract.verifier = "";
@@ -18,7 +19,6 @@ module.exports = async function(deployer) {
 
   let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
   
-  console.log(`Deployed successfully`);
   if (cdnUpdated) {
     console.log(`CDN was updated successfully`);
   } else {
