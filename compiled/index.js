@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.SeascapeAbi = exports.SeascapeAbiConfig = exports.SeascapeCdnConfig = exports.CdnUtil = exports.CdnWrite = exports.Provider = exports.Smartcontract = exports.Verifier = exports.ProofOfServer = exports.Wallet = exports.SmartcontractDataTypes = exports.SmartcontractData = void 0;
+exports.SeascapeAbi = exports.SeascapeAbiConfig = exports.SeascapeCdnConfig = exports.SmartcontractPath = exports.SmartcontractParams = exports.ProjectPath = exports.CdnUtil = exports.CdnWrite = exports.Provider = exports.Smartcontract = exports.Verifier = exports.ProofOfServer = exports.Wallet = exports.SmartcontractDataTypes = exports.SmartcontractData = void 0;
 var smartcontract_data_1 = require("./utils/smartcontract-data");
 exports.SmartcontractData = smartcontract_data_1["default"];
 var smartcontract_data_2 = require("./utils/smartcontract-data");
@@ -25,4 +25,8 @@ var seascape_abi_config_1 = require("./cdn-config/seascape-abi-config");
 exports.SeascapeAbiConfig = seascape_abi_config_1["default"];
 var seascape_abi_1 = require("./cdn-config/seascape-abi");
 exports.SeascapeAbi = seascape_abi_1["default"];
+var util_1 = require("./cdn-config/util");
+exports.ProjectPath = util_1.ProjectPath;
+exports.SmartcontractParams = util_1.SmartcontractParams;
+exports.SmartcontractPath = util_1.SmartcontractPath;
 //# sourceMappingURL=index.js.map

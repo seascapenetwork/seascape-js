@@ -43,24 +43,24 @@ var SeascapeCdnConfig = /** @class */ (function () {
     function SeascapeCdnConfig(seascapeCdnConfig, project) {
         var _this = this;
         this.setSmartcontract = function (cdnClient, smartcontractPath, obj) { return __awaiter(_this, void 0, void 0, function () {
-            var idString, type, i, uploaded;
+            var idString, category, i, uploaded;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         idString = smartcontractPath.networkId.toString();
-                        type = smartcontractPath.type;
+                        category = smartcontractPath.category;
                         if (!this.seascapeCdnConfig[idString]) {
                             this.seascapeCdnConfig[idString] = {};
                         }
-                        if (!this.seascapeCdnConfig[idString][type]) {
-                            this.seascapeCdnConfig[idString][type] = [];
+                        if (!this.seascapeCdnConfig[idString][category]) {
+                            this.seascapeCdnConfig[idString][category] = [];
                         }
-                        i = this.contractIndex(idString, type, obj.name);
+                        i = this.contractIndex(idString, category, obj.name);
                         if (i === false) {
-                            this.seascapeCdnConfig[idString][type].push(obj);
+                            this.seascapeCdnConfig[idString][category].push(obj);
                         }
                         else {
-                            this.seascapeCdnConfig[idString][type][i] = obj;
+                            this.seascapeCdnConfig[idString][category][i] = obj;
                         }
                         return [4 /*yield*/, (0, alicloud_1.uploadConfig)(cdnClient, this)];
                     case 1:
@@ -176,41 +176,41 @@ var SeascapeCdnConfig = /** @class */ (function () {
      * @param type of the contracts
      * @returns false in case of an error, otherwise it returns the list of ContractConfigs
      */
-    SeascapeCdnConfig.prototype.availableContracts = function (networkId, type) {
+    SeascapeCdnConfig.prototype.availableContracts = function (networkId, category) {
         if (!SeascapeCdnConfig.ValidateConfNetwork(this.seascapeCdnConfig, networkId)) {
             return false;
         }
-        if (this.seascapeCdnConfig[networkId][type] === undefined || this.seascapeCdnConfig[networkId][type] === null) {
+        if (this.seascapeCdnConfig[networkId][category] === undefined || this.seascapeCdnConfig[networkId][category] === null) {
             console.log({
                 error_path: 'src/utils/config.availableContracts',
                 line: 'no_type',
-                message: "Invalid address type '".concat(type, "'")
+                message: "Invalid address category '".concat(category, "'")
             });
             return false;
         }
-        return this.seascapeCdnConfig[networkId][type];
+        return this.seascapeCdnConfig[networkId][category];
     };
     var _a;
     _a = SeascapeCdnConfig;
-    SeascapeCdnConfig.New = function (configPath) { return __awaiter(void 0, void 0, void 0, function () {
+    SeascapeCdnConfig.New = function (projectPath) { return __awaiter(void 0, void 0, void 0, function () {
         var url, config;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
-                    url = CdnUtil.cdnConfigUrl(configPath);
-                    return [4 /*yield*/, (0, json_1.loadRemote)(url, configPath.empty)];
+                    url = CdnUtil.cdnConfigUrl(projectPath);
+                    return [4 /*yield*/, (0, json_1.loadRemote)(url, projectPath.empty)];
                 case 1:
                     config = _b.sent();
                     if (config === false) {
-                        if (configPath.empty) {
-                            return [2 /*return*/, new SeascapeCdnConfig({}, configPath)];
+                        if (projectPath.empty) {
+                            return [2 /*return*/, new SeascapeCdnConfig({}, projectPath)];
                         }
                         else {
                             throw "Failed to load the Seascape CDN Config from the remote path";
                         }
                     }
                     else {
-                        return [2 /*return*/, new SeascapeCdnConfig(config, configPath)];
+                        return [2 /*return*/, new SeascapeCdnConfig(config, projectPath)];
                     }
                     return [2 /*return*/];
             }

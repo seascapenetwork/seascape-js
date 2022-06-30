@@ -1,10 +1,44 @@
 "use strict";
 exports.__esModule = true;
-exports.cdnWriteAbiUrl = exports.cdnReadAbiUrl = exports.cdnWriteAbiConfigUrl = exports.cdnReadAbiConfigUrl = exports.cdnConfigUrl = exports.cdnBucket = exports.cdnUrl = void 0;
+exports.cdnWriteAbiUrl = exports.cdnReadAbiUrl = exports.cdnWriteAbiConfigUrl = exports.cdnReadAbiConfigUrl = exports.cdnConfigUrl = exports.cdnBucket = exports.cdnUrl = exports.SmartcontractPath = exports.ProjectPath = exports.SmartcontractParams = void 0;
 var SEASCAPE_CDN = 'https://cdn.seascape.network';
 var SEASCAPE_TEMP_CDN = 'https://cdn-temp.seascape.network';
 var SEASCAPE_CDN_BUCKET = 'seascape-cdn';
 var SEASCAPE_TEMP_CDN_BUCKET = 'seascape-cdn-temp';
+var SmartcontractParams = /** @class */ (function () {
+    function SmartcontractParams(name, abi, address, txid, owner, verifier, fund) {
+        if (owner === void 0) { owner = ""; }
+        if (verifier === void 0) { verifier = ""; }
+        if (fund === void 0) { fund = ""; }
+        this.name = name;
+        this.abi = abi;
+        this.address = address;
+        this.txid = txid;
+        this.owner = owner;
+        this.verifier = verifier;
+        this.fund = fund;
+    }
+    return SmartcontractParams;
+}());
+exports.SmartcontractParams = SmartcontractParams;
+var ProjectPath = /** @class */ (function () {
+    function ProjectPath(project, env, empty, temp) {
+        this.project = project;
+        this.env = env;
+        this.empty = empty;
+        this.temp = temp;
+    }
+    return ProjectPath;
+}());
+exports.ProjectPath = ProjectPath;
+var SmartcontractPath = /** @class */ (function () {
+    function SmartcontractPath(networkId, category) {
+        this.networkId = networkId;
+        this.category = category;
+    }
+    return SmartcontractPath;
+}());
+exports.SmartcontractPath = SmartcontractPath;
 var cdnUrl = function (temp) {
     if (!temp) {
         return SEASCAPE_CDN;

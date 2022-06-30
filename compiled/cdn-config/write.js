@@ -42,34 +42,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.connectCdnByEnv = exports.connectCdn = exports.setTruffleSmartcontract = exports.setHardhatSmartcontract = void 0;
+exports.connectCdnByEnv = exports.connectCdn = exports.setSmartcontract = void 0;
 var alicloud_1 = require("./alicloud");
-var hardhat_1 = require("../utils/hardhat");
 var seascape_cdn_config_1 = require("./seascape-cdn-config");
 var seascape_abi_config_1 = require("./seascape-abi-config");
 var seascape_abi_1 = require("./seascape-abi");
 var __1 = require("..");
-var setSmartcontract = function (temp, contractName, abi, configPath, smartcontractPath, smartcontract) { return __awaiter(void 0, void 0, void 0, function () {
+var setSmartcontract = function (projectPath, smartcontractPath, smartcontract) { return __awaiter(void 0, void 0, void 0, function () {
     var client, abiConfig, seascapeCdnConfig;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, alicloud_1.connectionByEnvironment)(temp)];
+            case 0: return [4 /*yield*/, (0, alicloud_1.connectionByEnvironment)(projectPath.temp)];
             case 1:
                 client = _a.sent();
                 if (client === undefined) {
                     return [2 /*return*/, false];
                 }
-                return [4 /*yield*/, seascape_abi_config_1["default"].New(temp, contractName)];
+                return [4 /*yield*/, seascape_abi_config_1["default"].New(projectPath.temp, smartcontract.name)];
             case 2:
                 abiConfig = _a.sent();
                 return [4 /*yield*/, abiConfig.incrementVersion(client)];
             case 3:
                 _a.sent();
-                smartcontract.abi = __1.CdnUtil.cdnReadAbiUrl(temp, abiConfig);
-                return [4 /*yield*/, seascape_abi_1["default"].SetAbi(client, abiConfig, abi)];
+                smartcontract.abi = __1.CdnUtil.cdnReadAbiUrl(projectPath.temp, abiConfig);
+                return [4 /*yield*/, seascape_abi_1["default"].SetAbi(client, abiConfig, smartcontract.abi)];
             case 4:
                 _a.sent();
-                return [4 /*yield*/, seascape_cdn_config_1["default"].New(configPath)];
+                return [4 /*yield*/, seascape_cdn_config_1["default"].New(projectPath)];
             case 5:
                 seascapeCdnConfig = _a.sent();
                 return [4 /*yield*/, seascapeCdnConfig.setSmartcontract(client, smartcontractPath, smartcontract)];
@@ -77,64 +76,7 @@ var setSmartcontract = function (temp, contractName, abi, configPath, smartcontr
         }
     });
 }); };
-/**
- * @param params Object containing the following parameters
- */
-var setHardhatSmartcontract = function (temp, params) { return __awaiter(void 0, void 0, void 0, function () {
-    var configPath, smartcontractPath, smartcontract, abi;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                configPath = { project: params.projectName, env: params.projectEnv, empty: true };
-                smartcontractPath = { networkId: params.networkId, type: params.contractType };
-                smartcontract = {
-                    name: params.contractName,
-                    address: params.deployedInstance.address,
-                    txid: params.deployedInstance.deployTransaction.hash,
-                    abi: "",
-                    owner: params.owner ? params.owner : "",
-                    verifier: params.verifier ? params.verifier : "",
-                    fund: params.fund ? params.fund : ""
-                };
-                return [4 /*yield*/, (0, hardhat_1.abiFile)(params.contractName)];
-            case 1:
-                abi = _a.sent();
-                if (!abi) {
-                    console.log("Failed to load the abi of ".concat(params.contractName, " in hardhat framework"));
-                    return [2 /*return*/, false];
-                }
-                return [2 /*return*/, setSmartcontract(temp, params.contractName, abi, configPath, smartcontractPath, smartcontract)];
-        }
-    });
-}); };
-exports.setHardhatSmartcontract = setHardhatSmartcontract;
-/**
- * Order in which data is updated:
- * - Set the Abi Configuration, Abi URL depends on the Abi Configuration
- * - Set the Abi, CDN Config requires the URL of the Abi
- * - Set the CDN Config
- * @param params
- * @param temp
- * @returns
- */
-var setTruffleSmartcontract = function (temp, params) { return __awaiter(void 0, void 0, void 0, function () {
-    var configPath, smartcontractPath, smartcontract;
-    return __generator(this, function (_a) {
-        configPath = { project: params.projectName, env: params.projectEnv, empty: true };
-        smartcontractPath = { networkId: params.networkId, type: params.contractType };
-        smartcontract = {
-            name: params.contractName,
-            address: params.contractAddress,
-            txid: params.txid,
-            abi: "",
-            owner: params.owner ? params.owner : "",
-            verifier: params.verifier ? params.verifier : "",
-            fund: params.fund ? params.fund : ""
-        };
-        return [2 /*return*/, setSmartcontract(temp, params.contractName, params.contractAbi, configPath, smartcontractPath, smartcontract)];
-    });
-}); };
-exports.setTruffleSmartcontract = setTruffleSmartcontract;
+exports.setSmartcontract = setSmartcontract;
 exports.connectCdn = alicloud_1.connection;
 exports.connectCdnByEnv = alicloud_1.connectionByEnvironment;
 //# sourceMappingURL=write.js.map
