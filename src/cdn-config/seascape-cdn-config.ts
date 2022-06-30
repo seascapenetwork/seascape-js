@@ -6,23 +6,23 @@ export default class SeascapeCdnConfig {
     private seascapeCdnConfig: any;
     private project: any;
 
-    constructor(seascapeCdnConfig: any, project: CdnUtil.ConfigPath) {
+    constructor(seascapeCdnConfig: any, project: CdnUtil.ProjectPath) {
         this.seascapeCdnConfig = seascapeCdnConfig;
         this.project = project;
     }
 
-    public static New = async (configPath: CdnUtil.ConfigPath): Promise<SeascapeCdnConfig> => {
-        let url = CdnUtil.cdnConfigUrl(configPath);
+    public static New = async (projectPath: CdnUtil.ProjectPath): Promise<SeascapeCdnConfig> => {
+        let url = CdnUtil.cdnConfigUrl(projectPath);
 
-        let config = await loadRemote(url, configPath.empty);
+        let config = await loadRemote(url, projectPath.empty);
         if (config === false) {
-            if (configPath.empty) {
-               return new SeascapeCdnConfig({}, configPath);
+            if (projectPath.empty) {
+               return new SeascapeCdnConfig({}, projectPath);
             } else {
                 throw `Failed to load the Seascape CDN Config from the remote path`;
             }
         } else {
-            return new SeascapeCdnConfig(config, configPath);
+            return new SeascapeCdnConfig(config, projectPath);
         }
     }
 
@@ -125,40 +125,40 @@ export default class SeascapeCdnConfig {
      * @param type of the contracts
      * @returns false in case of an error, otherwise it returns the list of ContractConfigs
      */
-    availableContracts (networkId: string, type: string) {
+    availableContracts (networkId: string, category: string) {
         if (!SeascapeCdnConfig.ValidateConfNetwork(this.seascapeCdnConfig, networkId)) {
             return false;
         }
 
-        if (this.seascapeCdnConfig[networkId][type] === undefined || this.seascapeCdnConfig[networkId][type] === null) {
+        if (this.seascapeCdnConfig[networkId][category] === undefined || this.seascapeCdnConfig[networkId][category] === null) {
             console.log({
                 error_path: 'src/utils/config.availableContracts',
                 line: 'no_type',
-                message: `Invalid address type '${type}'`
+                message: `Invalid address category '${category}'`
             });
             return false;
         }
 
-        return this.seascapeCdnConfig[networkId][type];
+        return this.seascapeCdnConfig[networkId][category];
     }
 
-    setSmartcontract = async (cdnClient: any, smartcontractPath: CdnUtil.SmartcontractPath, obj: CdnUtil.SmartcontractConfig) => {
+    setSmartcontract = async (cdnClient: any, smartcontractPath: CdnUtil.SmartcontractPath, obj: CdnUtil.SmartcontractParams) => {
         let idString = smartcontractPath.networkId.toString();
-        let type = smartcontractPath.type;
+        let category = smartcontractPath.category;
     
         if (!this.seascapeCdnConfig[idString]) {
             this.seascapeCdnConfig[idString] = {};
         }
     
-        if (!this.seascapeCdnConfig[idString][type]) {
-            this.seascapeCdnConfig[idString][type] = [];
+        if (!this.seascapeCdnConfig[idString][category]) {
+            this.seascapeCdnConfig[idString][category] = [];
         }
     
-        let i = this.contractIndex(idString, type, obj.name);
+        let i = this.contractIndex(idString, category, obj.name);
         if (i === false) {
-            this.seascapeCdnConfig[idString][type].push(obj);
+            this.seascapeCdnConfig[idString][category].push(obj);
         } else {
-            this.seascapeCdnConfig[idString][type][i] = obj;
+            this.seascapeCdnConfig[idString][category][i] = obj;
         }
     
         let uploaded = await uploadConfig(cdnClient, this);

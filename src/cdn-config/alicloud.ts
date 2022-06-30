@@ -1,5 +1,5 @@
 const OSS = require('ali-oss');
-import { ConfigPath, cdnBucket, cdnUrl, cdnWriteAbiUrl, cdnWriteAbiConfigUrl } from './util';
+import { ProjectPath, cdnBucket, cdnUrl, cdnWriteAbiUrl, cdnWriteAbiConfigUrl } from './util';
 import SeascapeAbiConfig from './seascape-abi-config';
 import SeascapeCdnConfig from './seascape-cdn-config';
 

@@ -10,7 +10,7 @@ import * as CdnUtil from "./cdn-config/util";
 import SeascapeCdnConfig from "./cdn-config/seascape-cdn-config";
 import SeascapeAbiConfig from "./cdn-config/seascape-abi-config";
 import SeascapeAbi from "./cdn-config/seascape-abi";
-import { ConfigPath, SmartcontractConfig, SmartcontractPath } from './cdn-config/util';
+import { ProjectPath, SmartcontractParams, SmartcontractPath } from './cdn-config/util';
 
 export {
     SmartcontractData,
@@ -22,8 +22,8 @@ export {
     Provider,
     CdnWrite,
     CdnUtil,
-    ConfigPath,
-    SmartcontractConfig,
+    ProjectPath,
+    SmartcontractParams,
     SmartcontractPath,
     SeascapeCdnConfig,
     SeascapeAbiConfig,

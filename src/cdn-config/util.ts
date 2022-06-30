@@ -6,58 +6,66 @@ const SEASCAPE_TEMP_CDN = 'https://cdn-temp.seascape.network';
 const SEASCAPE_CDN_BUCKET = 'seascape-cdn';
 const SEASCAPE_TEMP_CDN_BUCKET = 'seascape-cdn-temp';
 
+
 export interface FullAddressParam {
     name: string,
     fullAddress: boolean,
     temp?: boolean
 }
 
-export interface SmartcontractConfig {
-    name: string,
-    abi: string,
-    address: string,
-    txid?: string,
-    owner?: string,
-    verifier?: string,
-    fund?: string
+
+export class SmartcontractParams {
+    name: string;
+    abi: string;
+    address: string;
+    txid?: string;
+    owner?: string;
+    verifier?: string;
+    fund?: string;
+
+    constructor (
+        name: string, 
+        abi: string, 
+        address: string, 
+        txid: string, 
+        owner: string = "", 
+        verifier: string = "", 
+        fund: string = "") 
+    {
+        this.name = name;
+        this.abi = abi;
+        this.address = address;
+        this.txid = txid;
+        this.owner = owner;
+        this.verifier = verifier;
+        this.fund = fund;
+    }
 }
 
-export interface ConfigPath {
-    project: string,
-    env: string,
-    empty: boolean,
-    temp?: boolean
+
+export class ProjectPath {
+    public project: string;
+    public env: string;
+    public empty: boolean;
+    public temp: boolean;
+
+    constructor (project: string, env: string, empty: boolean, temp: boolean) {
+        this.project = project;
+        this.env = env;
+        this.empty = empty;
+        this.temp = temp;
+    }
 }
 
-export interface SmartcontractPath {
-    networkId: number,
-    type: string
-}
 
-export interface HardhatSmartcontractConfig {
-    networkId?: number,
-    projectName: string,
-    projectEnv: string,
-    contractType: string, 
-    contractName: string, 
-    deployedInstance: any,
-    owner?: string,
-    verifier?: string,
-    fund?: string
-}
+export class SmartcontractPath {
+    public networkId: number;
+    public category: string;
 
-export interface TruffleConfig {
-    networkId: number,
-    projectName: string,
-    projectEnv: string,
-    contractType: string, 
-    contractName: string,
-    contractAddress: string,
-    txid: string,
-    contractAbi: any,
-    owner?: string,
-    verifier?: string,
-    fund?: string
+    constructor (networkId: number, category: string) {
+        this.networkId = networkId;
+        this.category = category;
+    }
 }
 
 export const cdnUrl = function (temp: any): string {
@@ -74,7 +82,7 @@ export const cdnBucket = function (temp: any): string {
     return SEASCAPE_TEMP_CDN_BUCKET;
 }
 
-export let cdnConfigUrl = (path: ConfigPath): string => {
+export let cdnConfigUrl = (path: ProjectPath): string => {
     return `${cdnUrl(path.temp)}/${path.project}/${path.env}/config.json`;
 }
 

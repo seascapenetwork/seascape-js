@@ -1,4 +1,4 @@
-import { CdnUtil, CdnWrite, SeascapeAbiConfig, SeascapeAbi, ConfigPath, SmartcontractConfig, SmartcontractPath } from "../../../src/index";
+import { CdnUtil, CdnWrite, SeascapeAbiConfig, SeascapeAbi, ProjectPath, SmartcontractConfig, SmartcontractPath } from "../../../src/index";
 
 (async () => {
     let temp = true;
