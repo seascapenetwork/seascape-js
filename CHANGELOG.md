@@ -1,3 +1,19 @@
+# CHANGELOG 2.0.1
+* `ConfigPath` interface was replaced by `ProjectPath` class.
+* `SmartcontractConfig` class was replaced by `SmartcontractParams` class.
+* In the SeascapeCdnConfig files, the smartcontract type was renamed to smartcontract category.
+
+# CHANGELOG 2.0.0
+* Make the code object-oriented.
+* remove `CdnRead` module.
+* remove all functions in `CdnWrite` module except `setSmartcontract`.
+* add `SeascapeCdnConfig` module.
+* add `SeascapeApiConfig` module.
+* add `SeascapeAbi` module.
+* the truffle framework and hardhat framework CDN configuration update set through a single `setSmartcontract`.
+* remove `ALIBABA_BUCKET` environment variable.
+* remove `ALIBABA_REGION` environment variable.
+
 # CHANGELOG 1.7.5
 * Add the function to `cdnHost` as a preserved word. If the cdnHost is given, it will replace the default CDN host https://cdn.seascape.network
 
