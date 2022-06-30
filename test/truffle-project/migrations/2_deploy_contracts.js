@@ -7,18 +7,16 @@ module.exports = async function(deployer) {
   await deployer.link(ConvertLib, MetaCoin);
   let metacoin = await deployer.deploy(MetaCoin);
 
-  let truffleParams = {
-    projectName: 'greeter',
-    projectEnv: 'beta',
-    networkId: await deployer.network_id,
-    txid: metacoin.transactionHash,
-    contractName: 'MetaCoin',
-    contractType: 'main',
-    contractAbi: metacoin.abi,
-    contractAddress: metacoin.address
-  };
+  let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, true);
+  let smartcontractPath = new seascape.CdnUtil.SmartcontractPath(await deployer.network_id, 'main');
 
-  let cdnUpdated = await seascape.CdnWrite.setTruffleSmartcontract(truffleParams);
+  let smartcontract = new seascape.CdnUtil.SmartcontractConfig('MetaCoin', metacoin.address, metacoin.transactionHash, metacoin.abi);
+  // you can call it
+  // smartcontract.owner = "";
+  // smartcontract.verifier = "";
+  // smartcontract.fund = "";
+
+  let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
   
   console.log(`Deployed successfully`);
   if (cdnUpdated) {

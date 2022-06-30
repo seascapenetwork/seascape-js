@@ -4,7 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
-import { CdnWrite } from "../../../src";
+let seascape = require("../../../compiled");
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -19,23 +19,34 @@ async function main() {
   const Greeter = await ethers.getContractFactory(smartcontractName);
   const greeter = await Greeter.deploy("Hello, Hardhat and Seascape JS!");
 
-  const addresses = await ethers.getSigners();
-
-  let networkId = await addresses[0].getChainId();
-  console.log(`Network ID: ${networkId}`);
-
   await greeter.deployed();
-
-  let cdnUpdated = CdnWrite.setHardhatSmartcontract({
-      networkId: networkId,
-      projectName: 'greeter', 
-      projectEnv: 'beta', 
-      contractType: 'main', 
-      contractName: smartcontractName, 
-      deployedInstance: greeter
-  });
-
   console.log("Greeter deployed to:", greeter.address);
+
+  let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, true);
+  
+  const addresses = await ethers.getSigners();
+  let networkId = await addresses[0].getChainId();
+  let smartcontractPath = new seascape.CdnUtil.SmartcontractPath(networkId, 'main');
+
+  let smartcontract = new seascape.CdnUtil.SmartcontractConfig(
+    smartcontractName,
+    greeter.address,
+    greeter.deployTransaction.hash,
+    ""
+  );
+  smartcontract.owner = "";
+  smartcontract.verifier = "";
+  smartcontract.fund = "";
+
+  let abi = await seascape.utils.hardhatAbiFile(smartcontractName);
+  if (!abi) {
+    console.log(`Failed to load the abi of ${smartcontractName} in hardhat framework`);
+    return false;
+  } else {
+    smartcontract.abi = abi;
+  }
+  
+  let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
   if (!cdnUpdated) {
     console.log("Please update the cdn");
   }
