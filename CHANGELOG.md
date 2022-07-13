@@ -2,6 +2,7 @@
 * `ConfigPath` interface was replaced by `ProjectPath` class.
 * `SmartcontractConfig` class was replaced by `SmartcontractParams` class.
 * In the SeascapeCdnConfig files, the smartcontract type was renamed to smartcontract category.
+* `ProjectParams` was replaced by `ProjectPath` class.
 
 # CHANGELOG 2.0.0
 * Make the code object-oriented.

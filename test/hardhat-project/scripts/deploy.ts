@@ -22,7 +22,7 @@ async function main() {
   await greeter.deployed();
   console.log("Greeter deployed to:", greeter.address);
 
-  let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, true);
+  let projectPath = new seascape.CdnUtil.ProjectPath('greeter', 'beta', true, true);
   
   const addresses = await ethers.getSigners();
   let networkId = await addresses[0].getChainId();
@@ -46,7 +46,7 @@ async function main() {
     smartcontract.abi = abi;
   }
   
-  let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
+  let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectPath, smartcontractPath, smartcontract);
   if (!cdnUpdated) {
     console.log("Please update the cdn");
   }

@@ -173,7 +173,7 @@ async function main() {
     // Project environment: 'beta'
     // If the project doesn't have any configuration on CDN, we create an empty one. If you set the third argument to false, then it will throw an error.
     // If you set the last argument to false, it will connect to https://cdn.seascape.network. If you set the last argument to true, it will connect to https://cdn-temp.seascape.network. Cdn-temp is used for development phase.
-    let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, false);
+    let projectPath = new seascape.CdnUtil.ProjectPath('greeter', 'beta', true, false);
 
     const addresses = await ethers.getSigners();
     let networkId = await addresses[0].getChainId();
@@ -199,7 +199,7 @@ async function main() {
         smartcontract.abi = abi;
     }
 
-    let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
+    let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectPath, smartcontractPath, smartcontract);
     if (!cdnUpdated) {
         console.log("Please update the cdn");
     }
@@ -248,7 +248,7 @@ module.exports = async function(deployer) {
     // if the Configuration file wasn't created we create an empty one
     // the last argument is true, if you use https://cdn-temp.seascape.network/ for development.
     // the last argument is false, if you use https://cdn.seascape.network/.
-    let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, false);
+    let projectPath = new seascape.CdnUtil.ProjectPath('greeter', 'beta', true, false);
 
     // Inside the Configuration file, what is the network id.
     // and smartcontract category
@@ -268,7 +268,7 @@ module.exports = async function(deployer) {
     );
 
     // update the CdnConfig, Abi to the Seascape CDN
-    let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
+    let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectPath, smartcontractPath, smartcontract);
 
     if (cdnUpdated) {
         console.log(`CDN was updated successfully`);

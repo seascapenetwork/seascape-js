@@ -8,7 +8,7 @@ module.exports = async function(deployer) {
   await deployer.deploy(MetaCoin);
   console.log(`'MetaCoin' was deployed successfully at ${MetaCoin.address}`);
 
-  let projectParams = new seascape.CdnUtil.ProjectParams('greeter', 'beta', true, true);
+  let projectPath = new seascape.CdnUtil.ProjectPath('greeter', 'beta', true, true);
   let smartcontractPath = new seascape.CdnUtil.SmartcontractPath(await deployer.network_id, 'main');
 
   let smartcontract = new seascape.CdnUtil.SmartcontractConfig('MetaCoin', MetaCoin.address, MetaCoin.transactionHash, MetaCoin.abi);
@@ -17,7 +17,7 @@ module.exports = async function(deployer) {
   // smartcontract.verifier = "";
   // smartcontract.fund = "";
 
-  let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectParams, smartcontractPath, smartcontract);
+  let cdnUpdated = await seascape.CdnWrite.setSmartcontract(projectPath, smartcontractPath, smartcontract);
   
   if (cdnUpdated) {
     console.log(`CDN was updated successfully`);
