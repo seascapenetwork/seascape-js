@@ -16,7 +16,7 @@ export interface FullAddressParam {
 
 export class SmartcontractParams {
     name: string;
-    abi: string;
+    abi: any;
     address: string;
     txid?: string;
     owner?: string;
@@ -25,7 +25,7 @@ export class SmartcontractParams {
 
     constructor (
         name: string, 
-        abi: string, 
+        abi: any, 
         address: string, 
         txid: string, 
         owner: string = "", 

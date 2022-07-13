@@ -1,6 +1,6 @@
 {
   "name": "seascape",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Seascape SDK to save 30% of your time in Dapp development",
   "main": "compiled/index.js",
   "files": [
@@ -41,6 +41,6 @@
     "ethers-ts": "^5.5.3",
     "stream-browserify": "^3.0.0",
     "tsify": "^5.0.4",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.4"
   }
 }
