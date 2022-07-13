@@ -274,7 +274,7 @@ module.exports = async function(deployer) {
         console.log(`CDN was updated successfully`);
     } else {
         console.log(`CDN update failed. Please upload upload it manually!`);
-        console.log(truffleParams);
+        console.log(projectPath, smartcontractPath, smartcontract);
     }
 }
 ```
