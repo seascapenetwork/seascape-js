@@ -24,6 +24,8 @@ export const setSmartcontract = async(projectPath: ProjectPath, smartcontractPat
 
     await SeascapeAbi.SetAbi(client, abiConfig, smartcontract.abi);
 
+    smartcontract.abi = CdnUtil.cdnReadAbiUrl(projectPath.temp, abiConfig);
+
     let seascapeCdnConfig = await SeascapeCdnConfig.New(projectPath);
     return await seascapeCdnConfig.setSmartcontract(client, smartcontractPath, smartcontract);
 }

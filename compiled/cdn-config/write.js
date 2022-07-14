@@ -47,6 +47,7 @@ var alicloud_1 = require("./alicloud");
 var seascape_cdn_config_1 = require("./seascape-cdn-config");
 var seascape_abi_config_1 = require("./seascape-abi-config");
 var seascape_abi_1 = require("./seascape-abi");
+var __1 = require("..");
 var setSmartcontract = function (projectPath, smartcontractPath, smartcontract) { return __awaiter(void 0, void 0, void 0, function () {
     var client, abiConfig, seascapeCdnConfig;
     return __generator(this, function (_a) {
@@ -66,6 +67,7 @@ var setSmartcontract = function (projectPath, smartcontractPath, smartcontract) 
                 return [4 /*yield*/, seascape_abi_1["default"].SetAbi(client, abiConfig, smartcontract.abi)];
             case 4:
                 _a.sent();
+                smartcontract.abi = __1.CdnUtil.cdnReadAbiUrl(projectPath.temp, abiConfig);
                 return [4 /*yield*/, seascape_cdn_config_1["default"].New(projectPath)];
             case 5:
                 seascapeCdnConfig = _a.sent();
